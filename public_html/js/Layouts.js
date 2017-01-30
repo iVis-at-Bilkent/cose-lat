@@ -400,7 +400,7 @@ var screenNodes = function(keyframeNumber){
   }
 };
 //
-var screenForces = function(keyframeNumber, zoom){
+var screenForces = function(keyframeNumber){
     var dataToScreen = animatedData[keyframeNumber];
     if (dataToScreen != null) {
         cy.nodes().forEach(function( ele ){
@@ -426,7 +426,6 @@ var screenForces = function(keyframeNumber, zoom){
 //              pNode = dataToScreen[temp.id()];
 //              dataToScreen[theId] = pNode;
 //            }
-
                 var zoom = cy.zoom();
                 var positionX = ele.renderedPosition('x');
                 var positionY = ele.renderedPosition('y');
