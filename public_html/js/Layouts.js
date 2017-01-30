@@ -20,6 +20,7 @@ $(function () {
     refreshCytoscape(cytoscapeJsGraph);
     setFileContent("graph0.graphml");
     
+
 //    var panProps = ({
 //        zoomFactor: 0.05, // zoom factor per zoom tick
 //        zoomDelay: 45, // how many ms between zoom ticks
@@ -399,7 +400,7 @@ var screenNodes = function(keyframeNumber){
   }
 };
 //
-var screenForces = function(keyframeNumber){
+var screenForces = function(keyframeNumber, zoom){
     var dataToScreen = animatedData[keyframeNumber];
     if (dataToScreen != null) {
         cy.nodes().forEach(function( ele ){
@@ -425,14 +426,17 @@ var screenForces = function(keyframeNumber){
 //              pNode = dataToScreen[temp.id()];
 //              dataToScreen[theId] = pNode;
 //            }
-            var positionX = ele.renderedPosition('x');
-            var positionY = ele.renderedPosition('y');
-            var springForceX = 15;
-            var springForceY = 20;
-            var repulsionForceX = 25;
-            var repulsionForceY = -10;
-            var gravityForceX = -20;
-            var gravityForceY = -30;
+
+                var zoom = cy.zoom();
+                var positionX = ele.renderedPosition('x');
+                var positionY = ele.renderedPosition('y');
+                var springForceX = 35*zoom;
+                var springForceY = 40*zoom;
+                var repulsionForceX = 45*zoom;
+                var repulsionForceY = (-30)*zoom;
+                var gravityForceX = (-40)*zoom;
+                var gravityForceY = (-50)*zoom;
+
             drawForce(positionX, positionY, springForceX, springForceY, 1);
             drawForce(positionX, positionY, repulsionForceX, repulsionForceY, 2);
             drawForce(positionX, positionY, gravityForceX, gravityForceY, 3);
@@ -444,7 +448,7 @@ var screenForces = function(keyframeNumber){
 function drawForce(posX, posY, forceX, forceY, type){   
     var canvas = $('#forceCanvas');
     var arrow = canvas.drawLine({
-      strokeStyle: (type==1)?'red':(type==2)?'blue':'yellow',
+      strokeStyle: (type===1)?'red':(type===2)?'blue':'yellow',
       strokeWidth: 2,
       rounded: true,
       endArrow: true,
