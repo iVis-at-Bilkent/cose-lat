@@ -426,15 +426,15 @@ var screenForces = function(keyframeNumber){
 //              pNode = dataToScreen[temp.id()];
 //              dataToScreen[theId] = pNode;
 //            }
-                var zoom = cy.zoom();
+
                 var positionX = ele.renderedPosition('x');
                 var positionY = ele.renderedPosition('y');
-                var springForceX = 35*zoom;
-                var springForceY = 40*zoom;
-                var repulsionForceX = 45*zoom;
-                var repulsionForceY = (-30)*zoom;
-                var gravityForceX = (-40)*zoom;
-                var gravityForceY = (-50)*zoom;
+                var springForceX = 35;
+                var springForceY = 40;
+                var repulsionForceX = 45;
+                var repulsionForceY = -30;
+                var gravityForceX = -40;
+                var gravityForceY = -50;
 
             drawForce(positionX, positionY, springForceX, springForceY, 1);
             drawForce(positionX, positionY, repulsionForceX, repulsionForceY, 2);
@@ -445,16 +445,17 @@ var screenForces = function(keyframeNumber){
 };
 //
 function drawForce(posX, posY, forceX, forceY, type){   
+    var zoom = cy.zoom();
     var canvas = $('#forceCanvas');
     var arrow = canvas.drawLine({
       strokeStyle: (type===1)?'red':(type===2)?'blue':'yellow',
-      strokeWidth: 2,
+      strokeWidth: 4*zoom,
       rounded: true,
       endArrow: true,
-      arrowRadius: 5,
+      arrowRadius: 10*zoom,
       arrowAngle: 90,
       x1: posX, y1: posY,
-      x2: posX + forceX, y2: posY + forceY
+      x2: posX + forceX*zoom, y2: posY + forceY*zoom
     });
 }
 
