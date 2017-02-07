@@ -132,8 +132,11 @@
     </div><!-- /.navbar-collapse -->
 </nav>
 
-<div id="cy"></div>
-
+<div class="cyContainer">
+  <div id="cy"></div>
+  <div id="navigator"></div>
+</div>
+    
 <div class="container bottom-bar" style="background-color: #e3f2fd;">
     <div class="row text-center">
        <div class="col-sm-offset-1"></div>
@@ -145,15 +148,6 @@
         <div class="col-lg-3 text-right">
             <label class="checkbox-inline text-primary"><input id="forcesCheck" type="checkbox">Forces</label>
             <label class="checkbox-inline text-primary"><input type="checkbox" value="">Displacement</label>
-            <!--
-            <label class="custom-select">Speed:</label>
-                <select class="custom-select">
-                 <option value="0.5">0.5</option>
-                 <option selected value="1">1</option>
-                 <option value="2">2</option>
-                 <option value="3">3</option>
-               </select>
-            -->
         </div>
         <div class="col-lg-6 text-center">
             <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
@@ -467,6 +461,7 @@
 <script src="js/cytoscape/cytoscape.min.js"></script>
 <script src="js/cytoscape/extensions/ui/cytoscape-panzoom.js"></script>
 <script src="js/cytoscape/extensions/ui/cytoscape-undo-redo.js"></script>
+<script src="js/cytoscape/extensions/ui/cytoscape-navigator.js"></script>
 <script src="js/cytoscape/extensions/layout/cytoscape-cose-bilkent.js"></script>
 
 <!-- CUSTOMS FOR DEMO -->

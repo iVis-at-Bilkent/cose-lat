@@ -19,7 +19,10 @@ $(function () {
     };
     refreshCytoscape(cytoscapeJsGraph);
     setFileContent("graph0.graphml");
-    
+    var naviOptions = {
+        container: $("#navigator")
+    };
+    cy.navigator(naviOptions); 
 
 //    var panProps = ({
 //        zoomFactor: 0.05, // zoom factor per zoom tick
@@ -488,7 +491,6 @@ function loadCanvas(){
     canvas.height = 590;
     canvas.style.zIndex = 9;
     canvas.style.position = "absolute";
-//    canvas.style.border = '3px solid #000';
     div.appendChild(canvas);
 }
 //function loadCanvas2(){

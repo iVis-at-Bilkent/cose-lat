@@ -502,6 +502,12 @@ var loadSample = function(fileName){
     numberOfKeyframes = 0;
 
     editForces();
+    $("#navigator").empty();
+    var naviOptions = {
+        container: $("#navigator")
+    };
+    cy.navigator(naviOptions); 
+
 };
 $("#sample0").click(function (e){
     loadSample("graph0");
