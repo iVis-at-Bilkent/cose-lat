@@ -63,7 +63,9 @@ i.shortcut {
         opacity: 1;
     }
 }
-
+.container {
+    width: 1000px; 
+}
 .nav-menu {
     border: 1px solid #ddd;
     border-radius: 0.25em;
@@ -72,7 +74,7 @@ i.shortcut {
     width: 1000px;
 }
 .navbar-header{
-    width: 250px;
+    width: 350px;
 }
 
 .nav li.dropdown ul.dropdown-menu li:HOVER ul {
@@ -166,10 +168,10 @@ i.shortcut {
 }
 .cytoscape-navigatorView{
   background: #729fcf;
-  opacity: 0.3;
+  opacity: 0.2;
 }
 .cytoscape-navigatorOverlay{
-  width: 300px;
+  width: 250px;
   height: 150px;
   position: absolute;
 }

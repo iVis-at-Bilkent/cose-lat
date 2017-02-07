@@ -36,7 +36,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>              
             </button>
-            <a class="navbar-brand"><i>cose-lat</i></a>
+            <a class="navbar-brand pull-right"><i>cose-lat</i></a>
         </div>
         <div class="collapse navbar-collapse" id="menuNavbar">
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -97,10 +97,10 @@
                         </li>
                     </ul>
                 </li>
--->               <li class="dropdown">
+--> <!--              <li class="dropdown">
                     <a href="#" data-toggle="dropdown" class="dropdown-toggle">Layout <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <!--
+     -->                   <!--
                         <li class="dropdown">
                             <a href="#" data-toggle="dropdown" class="dropdown-toggle">Style
                                 <b class="right-caret"></b>
@@ -116,16 +116,17 @@
                         </li>
                         <li class="divider"></li>
                         -->
-                        <li><a>CoSE-Bilkent</a></li>
+     <!--                   <li><a>CoSE-Bilkent</a></li>
                         <li class="divider"></li>
                         <li><a accesskey = "p" id = "perform-layout" href="#">Perform Layout (Alt+P)</a></li>
                         <li><a accesskey = "o" id = "layout-properties" href="#">Layout Properties (Alt+O)</a></li>
                     </ul>
                 </li>
+     
+                <li><a accesskey = "p" id = "perform-layout" href="#">Layout</a></li>
+                <li><a accesskey = "o" id = "layout-properties" href="#">Layout Options</a></li>-->
                 <li class="dropdown">
-                    <a href="#" data-toggle="modal" data-target="#quick-help-template">
-                        Help
-                    </a>
+                    <a href="#" data-toggle="modal" data-target="#quick-help-template">Help</a>
                 </li>
             </ul>
         </div>
@@ -145,11 +146,11 @@
         </div>
     </div>
     <div class="row no-gutter">
-        <div class="col-lg-3 text-right">
-            <label class="checkbox-inline text-primary"><input id="forcesCheck" type="checkbox">Forces</label>
-            <label class="checkbox-inline text-primary"><input type="checkbox" value="">Displacement</label>
+        <div class="col-lg-4 text-right">
+            <button type="button" id = "perform-layout" class="btn btn-info btn-md">Perform Layout</button>
+            <button type="button" id = "layout-properties" class="btn btn-info btn-md text-left"><span class="glyphicon glyphicon-cog"></span></button>
         </div>
-        <div class="col-lg-6 text-center">
+        <div class="col-lg-5 text-right">
             <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
                 <a id="stepBackwardButton" href="#" class="btn btn-info btn-lg">
                     <span class="glyphicon glyphicon-step-backward"></span>
@@ -170,6 +171,9 @@
                     <span class="glyphicon glyphicon-step-forward"></span>
                 </a>
             </div>
+        </div>
+        <div class="col-lg-1 text-right">
+            <label class="checkbox-inline text-primary"><input id="forcesCheck" type="checkbox">Forces</label>
         </div>
         <div class="col-lg-3  text-left">
             <div class="row text-center">
