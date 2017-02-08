@@ -506,8 +506,9 @@ var loadSample = function(fileName){
     var naviOptions = {
         container: $("#navigator")
     };
-    cy.navigator(naviOptions); 
-
+    cy.navigator(naviOptions);
+    hideNodeDetail();
+    screenNodeDetail();
 };
 $("#sample0").click(function (e){
     loadSample("graph0");

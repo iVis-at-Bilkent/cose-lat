@@ -23,7 +23,7 @@ $(function () {
         container: $("#navigator")
     };
     cy.navigator(naviOptions); 
-
+    screenNodeDetail();
 //    var panProps = ({
 //        zoomFactor: 0.05, // zoom factor per zoom tick
 //        zoomDelay: 45, // how many ms between zoom ticks
@@ -451,7 +451,7 @@ function drawForce(posX, posY, forceX, forceY, type){
     var zoom = cy.zoom();
     var canvas = $('#forceCanvas');
     var arrow = canvas.drawLine({
-      strokeStyle: (type===1)?'red':(type===2)?'blue':'yellow',
+      strokeStyle: (type===1)?'#ff0000':(type===2)?'#0000ff':'#00ff00',
       strokeWidth: 4*zoom,
       rounded: true,
       endArrow: true,
@@ -492,15 +492,58 @@ function loadCanvas(){
     canvas.style.zIndex = 9;
     canvas.style.position = "absolute";
     div.appendChild(canvas);
+};
+function screenNodeDetail(){
+    cy.on('select', 'node', function(){
+        document.getElementById('nodeDetail').style.visibility = "visible";
+        document.getElementById('navigator').style.visibility = "hidden";
+        var selectedNodes = cy.nodes(":selected");
+        $('#nodeDetail').drawText({
+            name: 'nodeName',
+            fillStyle: '#36c',
+            x: 150, y: 10,
+            fontSize: '12pt',
+            fontStyle: 'bold',
+            fontFamily: 'Arial',
+            text: selectedNodes.data('name')
+        });
+        $('#nodeDetail').drawText({
+            name: 'springForce',
+            fillStyle: '#f00',
+            fromCenter: false,
+            x: 10, y: 90,
+            fontSize: '12pt',
+            fontStyle: 'bold',
+            fontFamily: 'Arial',
+            text: 'Spring: 0.00'
+        });
+        $('#nodeDetail').drawText({
+            name: 'repulsionForce',
+            fillStyle: '#00f',
+            fromCenter: false,
+            x: 10, y: 110,
+            fontSize: '12pt',
+            fontStyle: 'bold',
+            fontFamily: 'Arial',
+            text: 'Repulsion: 0.00'
+        });
+        $('#nodeDetail').drawText({
+            name: 'gravityForce',
+            fillStyle: '#0f0',
+            fromCenter: false,
+            x: 10, y: 130,
+            fontSize: '12pt',
+            fontStyle: 'bold',
+            fontFamily: 'Arial',
+            text: 'Gravity: 0.00'
+        });
+    });
+    cy.on('unselect', 'node', function(){
+        hideNodeDetail();
+    });
+};
+function hideNodeDetail(){
+    $('#nodeDetail').clearCanvas();
+    document.getElementById("nodeDetail").style.visibility = "hidden";
+    document.getElementById("navigator").style.visibility = "visible";  
 }
-//function loadCanvas2(){
-//    var canvas = document.createElement('canvas');
-//    div = document.getElementById("myNavbar"); 
-//    canvas.id = "forceCanvas2";
-//    canvas.width = 1000;
-//    canvas.height = 590;
-//    canvas.style.zIndex = 9;
-//    canvas.style.position = "absolute";
-//    canvas.style.border = '3px solid #000';
-//    div.append(canvas);
-//}
