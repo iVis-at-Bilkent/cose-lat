@@ -508,7 +508,6 @@ var loadSample = function(fileName){
     };
     cy.navigator(naviOptions);
     hideNodeDetail();
-    screenNodeDetail();
 };
 $("#sample0").click(function (e){
     loadSample("graph0");
@@ -545,6 +544,11 @@ slider.on("change", function(evt) {
     screenNodes(keyframeNumber);
     if($('#forcesCheck').is(":checked")){
         screenForces(keyframeNumber);
+    }
+    if(cy.nodes(":selected").length !== 0){
+        $('#nodeDetail').clearCanvas();
+        var selectedNode = cy.nodes(":selected");
+        screenNodeDetail(selectedNode);  
     }
 });
 
