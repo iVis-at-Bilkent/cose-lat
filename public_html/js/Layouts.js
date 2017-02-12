@@ -249,9 +249,7 @@ function refreshCytoscape(graphData) { // on dom ready
 
     ur.action("addNode", addNode, removeNodes);
     ur.action("createCompound", createCompoundForSelectedNodes, removeCompound);
-}
-;
-
+};
 
 var COSEBilkentLayout = Backbone.View.extend({
     defaultLayoutProperties: {
@@ -261,20 +259,14 @@ var COSEBilkentLayout = Backbone.View.extend({
         // Called on `layoutstop`
         stop: function () {
         },
-        // Number of iterations between consecutive screen positions update (0 -> only updated on the end)
-        refresh: 0,
         // Whether to fit the network view after when done
         fit: true,
         // Padding on fit
         padding: 10,
         // Whether to enable incremental mode
-        incremental: true,
-        // Whether to use the JS console to print debug messages
-        debug: true,
+        randomize: true,
         // Node repulsion (non overlapping) multiplier
         nodeRepulsion: 4500,
-        // Node repulsion (overlapping) multiplier
-        nodeOverlap: 10,
         // Ideal edge (non nested) length
         idealEdgeLength: 50,
         // Divisor to compute edge forces
@@ -285,16 +277,20 @@ var COSEBilkentLayout = Backbone.View.extend({
         gravity: 0.4,
         // Maximum number of iterations to perform
         numIter: 2500,
-        // Initial temperature (maximum node displacement)
-        initialTemp: 200,
-        // Cooling factor (how the temperature is reduced between consecutive iterations
-        coolingFactor: 0.95,
-        // Lower temperature threshold (below this point the layout will end)
-        minTemp: 1,
         // For enabling tiling
         tile: true,
         //whether to make animation while performing the layout
-        animate: true
+        animate: 'during',
+        // Represents the amount of the vertical space to put between the zero degree members during the tiling operation(can also be a function)
+        tilingPaddingVertical: 10,
+        // Represents the amount of the horizontal space to put between the zero degree members during the tiling operation(can also be a function)
+        tilingPaddingHorizontal: 10,
+        // Gravity range (constant) for compounds
+        gravityRangeCompound: 1.5,
+        // Gravity force (constant) for compounds
+        gravityCompound: 1.0,
+        // Gravity range (constant)
+        gravityRange: 3.8
     },
     currentLayoutProperties: null,
     initialize: function () {
@@ -321,35 +317,36 @@ var COSEBilkentLayout = Backbone.View.extend({
         self.template = temp(this.currentLayoutProperties);
         $(self.el).html(self.template);
 
-        $(self.el).dialog();
+        $(self.el).dialog({width:300}).prev(".ui-dialog-titlebar").css("background","#5bc0de");;
 
-        $("#save-layout4").click( function (evt) {
-            self.currentLayoutProperties.nodeRepulsion = Number(document.getElementById("node-repulsion4").value);
-            self.currentLayoutProperties.nodeOverlap = Number(document.getElementById("node-overlap4").value);
-            self.currentLayoutProperties.idealEdgeLength = Number(document.getElementById("ideal-edge-length4").value);
-            self.currentLayoutProperties.edgeElasticity = Number(document.getElementById("edge-elasticity4").value);
-            self.currentLayoutProperties.nestingFactor = Number(document.getElementById("nesting-factor4").value);
-            self.currentLayoutProperties.gravity = Number(document.getElementById("gravity4").value);
-            self.currentLayoutProperties.numIter = Number(document.getElementById("num-iter4").value);
-            self.currentLayoutProperties.animate = document.getElementById("animate4").checked;
-            self.currentLayoutProperties.refresh = Number(document.getElementById("refresh4").value);
-            self.currentLayoutProperties.fit = document.getElementById("fit4").checked;
-            self.currentLayoutProperties.padding = Number(document.getElementById("padding4").value);
-            self.currentLayoutProperties.debug = document.getElementById("debug4").checked;
-            self.currentLayoutProperties.initialTemp = Number(document.getElementById("initialTemp4").value);
-            self.currentLayoutProperties.minTemp = Number(document.getElementById("minTemp4").value);
-            self.currentLayoutProperties.coolingFactor = Number(document.getElementById("coolingFactor4").value);
-            self.currentLayoutProperties.incremental = document.getElementById("incremental4").checked;
-            self.currentLayoutProperties.tile = document.getElementById("tile4").checked;
-
-
+        $("#save-layout").click( function (evt) {
+            self.currentLayoutProperties.padding = Number(document.getElementById("padding").value);
+            self.currentLayoutProperties.nodeRepulsion = Number(document.getElementById("node-repulsion").value);
+            self.currentLayoutProperties.idealEdgeLength = Number(document.getElementById("ideal-edge-length").value);
+            self.currentLayoutProperties.edgeElasticity = Number(document.getElementById("edge-elasticity").value);
+            self.currentLayoutProperties.nestingFactor = Number(document.getElementById("nesting-factor").value);
+            self.currentLayoutProperties.gravity = Number(document.getElementById("gravity").value);
+            self.currentLayoutProperties.numIter = Number(document.getElementById("num-iter").value);
+            self.currentLayoutProperties.tilingPaddingVertical = Number(document.getElementById("tiling-padding-vertical").value);            
+            self.currentLayoutProperties.tilingPaddingHorizontal = Number(document.getElementById("tiling-padding-horizontal").value);                       
+            self.currentLayoutProperties.gravityRangeCompound = Number(document.getElementById("gravity-range-compound").value);             
+            self.currentLayoutProperties.gravityCompound = Number(document.getElementById("gravity-compound").value);            
+            self.currentLayoutProperties.gravityRange = Number(document.getElementById("gravity-range").value);            
+            self.currentLayoutProperties.fit = document.getElementById("fit").checked;            
+            self.currentLayoutProperties.randomize = document.getElementById("randomize").checked;            
+            self.currentLayoutProperties.tile = document.getElementById("tile").checked;
+            if(document.getElementById("animate").checked === true){
+                self.currentLayoutProperties.animate = 'during';
+            }
+            else {
+                self.currentLayoutProperties.animate = false;
+            }
             $(self.el).dialog('close');
 
         });
 
-        $("#default-layout4").click( function (evt) {
+        $("#default-layout").click( function (evt) {
             self.copyProperties();
-//            console.log("asd");
             var temp = _.template($("#cose-bilkent-settings-template").html());
             self.template = temp(self.currentLayoutProperties);
             $(self.el).html(self.template);
@@ -379,10 +376,11 @@ var screenNodes = function(keyframeNumber){
     var dataToScreen = animatedData[keyframeNumber];
     if (dataToScreen != null) {
         cy.nodes().positions(function (i, ele) {
-          if (ele.data('dummy_parent_id')) {
-            return {  
-              x: dataToScreen[ele.data('dummy_parent_id')].x,
-              y: dataToScreen[ele.data('dummy_parent_id')].y
+          if (ele.scratch('coseBilkent') && ele.scratch('coseBilkent').dummy_parent_id) {
+            var dummyParent = ele.scratch('coseBilkent').dummy_parent_id;
+            return {
+                x: dummyParent.x,
+                y: dummyParent.y
             };
           }
           var theId = ele.data('id');
@@ -401,6 +399,12 @@ var screenNodes = function(keyframeNumber){
         var tempLayout = new COSEBilkentLayout();
         if (tempLayout.currentLayoutProperties.fit)
           cy.fit(cy.nodes(), tempLayout.currentLayoutProperties.padding);
+      
+//        if (!ready) {
+//            ready = true;
+//            cy.one('layoutready', tempLayout.currentLayoutProperties.ready);
+//            cy.trigger({type: 'layoutready', layout: 'cose-bilkent'});
+//        }
   }
 };
 //

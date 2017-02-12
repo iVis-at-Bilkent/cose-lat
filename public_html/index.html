@@ -277,184 +277,154 @@
         </div>
     </div>
 </div>
-<div id="cose-bilkent-layout-table" title="CoSE-Bilkent Properties" style="display: inline;resize: none;">
+<div id="cose-bilkent-layout-table" title="CoSE-Bilkent Properties" style="display: inline;">
     <!-- sbgn layout table will be shown here -->
 </div>
-<div id="cose-layout-table" title="CoSE Properties" style="display: inline;resize: none;">
-    <!-- sbgn layout table will be shown here -->
-</div>
-<div id="cola-layout-table" title="Cola Properties" style="display: inline;resize: none;">
-    <!-- sbgn layout table will be shown here -->
-</div>
-<div id="springy-layout-table" title="Springy Properties" style="display: inline;resize: none;">
-    <!-- sbgn layout table will be shown here -->
-</div>
-<div id="arbor-layout-table" title="Arbor Properties" style="display: inline;resize: none;">
-    <!-- sbgn layout table will be shown here -->
-</div>
-
-
 
 <script type="text/template" id="cose-bilkent-settings-template">
     <table class="table-condensed layout-table">
         <tr>
             <td>
-                <span class="add-on layout-text"> Node Repulsion </span>
+                <span class="col-4 col-form-label"> Padding </span>
             </td>
-            <td>
-                <input id="node-repulsion4" type="text" class="input-small layout-text" value= <%= nodeRepulsion %> >
+            <td class="col-xs-1">
+                <input id="padding" type="text" class="form-control input-sm" value= <%= padding %> >
             </td>
         </tr>
-
         <tr>
             <td>
-                <span class="add-on layout-text"> Node Overlap </span>
+                <span class="add-on layout-text"> Node Repulsion </span>
             </td>
-            <td>
-                <input id="node-overlap4" type="text" class="input-small layout-text" value= <%= nodeOverlap %> >
+            <td class="col-xs-1">
+                <input id="node-repulsion" type="text" class="form-control input-sm" value= <%= nodeRepulsion %> >
             </td>
         </tr>
-
         <tr>
             <td>
                 <span class="add-on layout-text"> Ideal Edge Length </span>
             </td>
-            <td>
-                <input id="ideal-edge-length4" type="text" class="input-small layout-text" value= <%= idealEdgeLength %> >
+            <td class="col-xs-1">
+                <input id="ideal-edge-length" type="text" class="form-control input-sm" value= <%= idealEdgeLength %> >
             </td>
         </tr>
-
         <tr>
             <td>
                 <span class="add-on layout-text"> Edge Elasticity </span>
             </td>
-            <td>
-                <input id="edge-elasticity4" type="text" class="input-small layout-text" value= <%= edgeElasticity %> >
+            <td class="col-xs-1">
+                <input id="edge-elasticity" type="text" class="form-control input-sm" value= <%= edgeElasticity %> >
             </td>
         </tr>
-
         <tr>
             <td>
                 <span class="add-on layout-text"> Nesting Factor </span>
             </td>
-            <td>
-                <input id="nesting-factor4" type="text" class="input-small layout-text" value= <%= nestingFactor %> >
+            <td class="col-xs-1">
+                <input id="nesting-factor" type="text" class="form-control input-sm" value= <%= nestingFactor %> >
             </td>
         </tr>
-
         <tr>
             <td>
                 <span class="add-on layout-text"> Gravity </span>
             </td>
-            <td>
-                <input id="gravity4" type="text" class="input-small layout-text" value= <%= gravity %> >
+            <td class="col-xs-1">
+                <input id="gravity" type="text" class="form-control input-sm" value= <%= gravity %> >
             </td>
         </tr>
-
         <tr>
             <td>
                 <span class="add-on layout-text"> Number of Iterations </span>
             </td>
+            <td class="col-xs-1">
+                <input id="num-iter" type="text" class="form-control input-sm" value= <%= numIter %> >
+            </td>
+        </tr>
+        <tr>
             <td>
-                <input id="num-iter4" type="text" class="input-small layout-text" value= <%= numIter %> >
+                <span class="add-on layout-text"> Tiling Padding Vertical </span>
+            </td>
+            <td class="col-xs-1">
+                <input id="tiling-padding-vertical" type="text" class="form-control input-sm" value= <%= tilingPaddingVertical %> >
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="add-on layout-text"> Tiling Padding Horizontal </span>
+            </td>
+            <td class="col-xs-1">
+                <input id="tiling-padding-horizontal" type="text" class="form-control input-sm" value= <%= tilingPaddingHorizontal %> >
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="add-on layout-text"> Gravity Range Compound </span>
+            </td>
+            <td class="col-xs-1">
+                <input id="gravity-range-compound" type="text" class="form-control input-sm" value= <%= gravityRangeCompound %> >
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="add-on layout-text"> Gravity Compound </span>
+            </td>
+            <td class="col-xs-1">
+                <input id="gravity-compound" type="text" class="form-control input-sm" value= <%= gravityCompound %> >
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="add-on layout-text"> Gravity Range </span>
+            </td>
+            <td class="col-xs-1">
+                <input id="gravity-range" type="text" class="form-control input-sm" value= <%= gravityRange %> >
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="add-on layout-text"> Fit </span>
+            </td>
+            <td class="text-center">
+                <input id="fit" type="checkbox" class="input-small layout-text" <% if(fit){%> checked <%} %>>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="add-on layout-text"> Randomize </span>
+            </td>
+            <td class="text-center">
+                <input id="randomize" type="checkbox" class="input-small layout-text" <% if(randomize){%> checked <%} %>>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="add-on layout-text"> Tile </span>
+            </td>
+            <td class="text-center"">
+                <input id="tile" type="checkbox" class="input-small layout-text" <% if(tile){%> checked <%} %>>
             </td>
         </tr>
         <tr>
             <td>
                 <span class="add-on layout-text"> Animate </span>
             </td>
-            <td>
-                <input id="animate4" type="checkbox" class="input-small layour-text" <% if(animate){%> checked <%} %>>
-            </td>
-        </tr><tr>
-        <td>
-            <span class="add-on layout-text"> Tile </span>
-        </td>
-        <td>
-            <input id="tile4" type="checkbox" class="input-small layour-text" <% if(tile){%> checked <%} %>>
-        </td>
-    </tr>
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Randomize </span>
-            </td>
-            <td>
-                <input id="incremental4" type="checkbox" class="input-small layour-text" <% if(incremental){%> checked <%} %>>
+            <td class="text-center"">
+                <input id="animate" type="checkbox" class="input-small layout-text" <% if(animate){%> checked <%} %>>
             </td>
         </tr>
-        <tr>
+        <tr id="layout-buttons" class="text-center">
             <td>
-                <span class="add-on layout-text"> Refresh </span>
+                <button id="save-layout" class="btn btn-info">Save</button>
             </td>
             <td>
-                <input id="refresh4" type="text" class="input-small layout-text" value= <%= refresh %> >
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Fit </span>
-            </td>
-            <td>
-                <input id="fit4" type="checkbox" class="input-small layout-text" <% if(fit){%> checked <%} %>>
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Padding </span>
-            </td>
-            <td>
-                <input id="padding4" type="text" class="input-small layout-text" value= <%= padding %> >
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Debug </span>
-            </td>
-            <td>
-                <input id="debug4" type="checkbox" class="input-small layout-text" <% if(debug){%> checked <%} %>>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Initial Temp. </span>
-            </td>
-            <td>
-                <input id="initialTemp4" type="text" class="input-small layout-text" value= <%= initialTemp%>>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Minimum Temp. </span>
-            </td>
-            <td>
-                <input id="minTemp4" type="text" class="input-small layout-text" value= <%= minTemp%>>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Cooling Factor </span>
-            </td>
-            <td>
-                <input id="coolingFactor4" type="text" class="input-small layout-text" value= <%= coolingFactor%>>
-            </td>
-        </tr>
-        <tr id="layout-buttons">
-            <td>
-                <button id="save-layout4" class="btn btn-default" >Save</button>
-            </td>
-            <td>
-                <button id="default-layout4" class="btn btn-default">Default</button>
+                <button id="default-layout" class="btn btn-info">Default</button>
             </td>
         </tr>
     </table>
 </script>
 <!-- VIEW SCRIPTS -->
 <script src="js/view_scripts/jquery-1.12.4.min.js"></script>
-<script src="js/view_scripts/jquery-ui.min.js"></script>
 <script src="js/view_scripts/bootstrap.min.js"></script>
+<script src="js/view_scripts/jquery-ui.min.js"></script>
 <script src="js/view_scripts/bootstrap-slider.min.js"></script>
 <script src="js/view_scripts/underscore-min.js"></script>
 <script src="js/view_scripts/backbone-min.js"></script>
