@@ -52,62 +52,53 @@ $("#cose-bilkent").css("background-color", "grey");
 function refreshCytoscape(graphData) { // on dom ready
     cy = cytoscape({
         container: $('#cy')[0],
-        style: [
-            {
-                selector: 'node',
-                style: {
-                    'content': 'data(name)',
-                    'background-color': '#aaa',
-                    'border-width': 1,
-                    'border-color': 'black',
-                    'text-valign': 'center',
-                    'color': 'white',
-                    'text-outline-width': 2,
-                    'text-outline-color': '#888',
-                    'shape': 'rectangle'
-                }
-            },
-            {
-                selector: 'node:selected',
-                style: {
-                    'background-color': 'black',
-                    'line-color': 'black',
-                    'target-arrow-color': 'black',
-                    'source-arrow-color': 'black',
-                    'text-outline-color': 'black',
-                    'border-color': 'black',
-                    'border-width': 5
-                }
-            },
-            {
-                selector: ':parent',
-                style: {
-                    'background-opacity': 0.333,
-                    'text-valign': "bottom"
-                }
-            },
-            {
-                selector: 'edge',
-                style: {
-                    'background-color': 'black',
-                    'line-color': 'black',
-                    'target-arrow-color': 'red',
-                    'source-arrow-color': 'black',
-                    'text-outline-color': 'black',
-                    'curve-style': "bezier"
-                }
-            },
-            {
-                selector: 'edge:selected',
-                style: {
-                    'background-color': 'black',
-                    'line-color': 'black',
-                    'width': 5,
-                    'opacity':1,
-                    'color' : 'black'
-                }
-            },
-        ],
+        style:
+            cytoscape.stylesheet()
+            .selector('node')
+            .css({
+                'content': 'data(name)',
+                'background-color': '#aaa',
+                'border-width': 1,
+                'border-color': 'black',
+                'text-valign': 'center',
+                'color': 'white',
+                'text-outline-width': 2,
+                'text-outline-color': '#888',
+                'shape': 'rectangle'
+            })
+            .selector('node:selected')
+            .css({
+                'background-color': 'black',
+                'line-color': 'black',
+                'target-arrow-color': 'black',
+                'source-arrow-color': 'black',
+                'text-outline-color': 'black',
+                'border-color': 'black',
+                'border-width': 5
+            })
+            .selector('node:parent')
+            .css({
+                'content': 'data(name)',
+                'background-opacity': 0.333,
+                'text-valign': "bottom"
+            })
+            .selector('edge')
+            .css({
+                'background-color': 'black',
+                'line-color': 'black',
+                'target-arrow-color': 'red',
+                'source-arrow-color': 'black',
+                'text-outline-color': 'black',
+                'curve-style': "bezier"
+            })
+            .selector('edge:selected')
+            .css({
+                'background-color': 'black',
+                'line-color': 'black',
+                'width': 5,
+                'opacity':1,
+                'color' : 'black'
+            }),
 
         elements: {
             nodes: graphData['nodes'],
@@ -133,83 +124,83 @@ function refreshCytoscape(graphData) { // on dom ready
                 }
             });
 
-            var getNodesData = function () {
-                var nodesData = {};
-                var nodes = cy.nodes();
-                for (var i = 0; i < nodes.length; i++) {
-                    var node = nodes[i];
-                    nodesData[node.id()] = {
-                        width: node.width(),
-                        height: node.height(),
-                        x: node.position("x"),
-                        y: node.position("y")
-                    };
-                }
-                return nodesData;
-            };
-
-            var enableDragAndDropMode = function () {
-                window.dragAndDropModeEnabled = true;
-                $("#sbgn-network-container").addClass("target-cursor");
-                cy.autolock(true);
-                cy.autounselectify(true);
-            };
-
-            var disableDragAndDropMode = function () {
-                window.dragAndDropModeEnabled = null;
-                window.nodeToDragAndDrop = null;
-                $("#sbgn-network-container").removeClass("target-cursor");
-                cy.autolock(false);
-                cy.autounselectify(false);
-            };
-
-            var lastMouseDownNodeInfo = null;
-            this.on("mousedown", "node", function () {
-                var self = this;
-                lastMouseDownNodeInfo = {};
-                lastMouseDownNodeInfo.lastMouseDownPosition = {
-                    x: this.position("x"),
-                    y: this.position("y")
-                };
-                lastMouseDownNodeInfo.node = this;
-            });
-
-            this.on("mouseup", "node", function () {
-                if (lastMouseDownNodeInfo == null) {
-                    return;
-                }
-                var node = lastMouseDownNodeInfo.node;
-                var lastMouseDownPosition = lastMouseDownNodeInfo.lastMouseDownPosition;
-                var mouseUpPosition = {
-                    x: node.position("x"),
-                    y: node.position("y")
-                };
-                if (mouseUpPosition.x != lastMouseDownPosition.x ||
-                    mouseUpPosition.y != lastMouseDownPosition.y) {
-                    var positionDiff = {
-                        x: mouseUpPosition.x - lastMouseDownPosition.x,
-                        y: mouseUpPosition.y - lastMouseDownPosition.y
-                    };
-
-                    var nodes;
-                    if (node.selected()) {
-                        nodes = cy.nodes(":visible").filter(":selected");
-                    }
-                    else {
-                        nodes = [];
-                        nodes.push(node);
-                    }
-
-                    var param = {
-                        positionDiff: positionDiff,
-                        nodes: nodes, move: false
-                    };
-                    editorActionsManager._do(new MoveNodeCommand(param));
-
-                    lastMouseDownNodeInfo = null;
-                    refreshUndoRedoButtonsStatus();
-                }
-            });
+//            var getNodesData = function () {
+//                var nodesData = {};
+//                var nodes = cy.nodes();
+//                for (var i = 0; i < nodes.length; i++) {
+//                    var node = nodes[i];
+//                    nodesData[node.id()] = {
+//                        width: node.width(),
+//                        height: node.height(),
+//                        x: node.position("x"),
+//                        y: node.position("y")
+//                    };
+//                }
+//                return nodesData;
+//            };
+//
+//            var enableDragAndDropMode = function () {
+//                window.dragAndDropModeEnabled = true;
+//                $("#sbgn-network-container").addClass("target-cursor");
+//                cy.autolock(true);
+//                cy.autounselectify(true);
+//            };
+//
+//            var disableDragAndDropMode = function () {
+//                window.dragAndDropModeEnabled = null;
+//                window.nodeToDragAndDrop = null;
+//                $("#sbgn-network-container").removeClass("target-cursor");
+//                cy.autolock(false);
+//                cy.autounselectify(false);
+//            };
+//
+//            var lastMouseDownNodeInfo = null;
+//            this.on("mousedown", "node", function () {
+//                var self = this;
+//                lastMouseDownNodeInfo = {};
+//                lastMouseDownNodeInfo.lastMouseDownPosition = {
+//                    x: this.position("x"),
+//                    y: this.position("y")
+//                };
+//                lastMouseDownNodeInfo.node = this;
+//            });
+//
+//            this.on("mouseup", "node", function () {
+//                if (lastMouseDownNodeInfo == null) {
+//                    return;
+//                }
+//                var node = lastMouseDownNodeInfo.node;
+//                var lastMouseDownPosition = lastMouseDownNodeInfo.lastMouseDownPosition;
+//                var mouseUpPosition = {
+//                    x: node.position("x"),
+//                    y: node.position("y")
+//                };
+//                if (mouseUpPosition.x != lastMouseDownPosition.x ||
+//                    mouseUpPosition.y != lastMouseDownPosition.y) {
+//                    var positionDiff = {
+//                        x: mouseUpPosition.x - lastMouseDownPosition.x,
+//                        y: mouseUpPosition.y - lastMouseDownPosition.y
+//                    };
+//
+//                    var nodes;
+//                    if (node.selected()) {
+//                        nodes = cy.nodes(":visible").filter(":selected");
+//                    }
+//                    else {
+//                        nodes = [];
+//                        nodes.push(node);
+//                    }
+//
+//                    var param = {
+//                        positionDiff: positionDiff,
+//                        nodes: nodes, move: false
+//                    };
+//                    editorActionsManager._do(new MoveNodeCommand(param));
+//
+//                    lastMouseDownNodeInfo = null;
+//                    refreshUndoRedoButtonsStatus();
+//                }
+//            });
         }
     });
     var panProps = ({

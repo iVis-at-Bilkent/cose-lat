@@ -134,45 +134,10 @@ $("#cose-bilkent").click( function (e) {
     whitenBackgrounds();
     $("#cose-bilkent").css("background-color", "grey");
 });
-/*$("#cose").click( function (e) {
-    tempName = "cose";
-    whitenBackgrounds();
-    $("#cose").css("background-color", "grey");
-});
-$("#cola").click( function (e) {
-    tempName = "cola";
-    whitenBackgrounds();
-    $("#cola").css("background-color", "grey");
-});
-$("#springy").click( function (e) {
-    tempName = "springy";
-    whitenBackgrounds();
-    $("#springy").css("background-color", "grey");
-});
-$("#arbor").click( function (e) {
-    tempName = "arbor";
-    whitenBackgrounds();
-    $("#arbor").css("background-color", "grey");
-});
-*/
+
 var coseBilkentLayoutProp = new COSEBilkentLayout({
     el: '#cose-bilkent-layout-table'
 });
-/*
-var coseLayoutProp = new COSELayout({
-    el: '#cose-layout-table'
-});
-var colaLayoutProp = new COLALayout({
-    el: '#cola-layout-table'
-});
-var arborLayoutProp = new ARBORLayout({
-    el: '#arbor-layout-table'
-});
-var springyLayoutProp = new SPRINGYLayout({
-    el: '#springy-layout-table'
-});
-*/
-
 
 $("#add-node-dialog").hide();
 
@@ -391,7 +356,7 @@ $("#layout-properties").click(function (e) {
 });
 
 $("#perform-layout").click(function (e) {
-    cy.layout().stop();
+
     cy.nodes().removeData("ports");
     cy.edges().removeData("portsource");
     cy.edges().removeData("porttarget");
