@@ -308,7 +308,7 @@ var COSEBilkentLayout = Backbone.View.extend({
         self.template = temp(this.currentLayoutProperties);
         $(self.el).html(self.template);
 
-        $(self.el).dialog({width:300}).prev(".ui-dialog-titlebar").css("background","#5bc0de");;
+        $(self.el).dialog({width:300, closeText: ""}).prev(".ui-dialog-titlebar").css("background","#5bc0de");;
 
         $("#save-layout").click( function (evt) {
             self.currentLayoutProperties.padding = Number(document.getElementById("padding").value);
@@ -481,12 +481,23 @@ function editForces(){
         }
     });
     cy.on('select','node', function(event){
-        showNodeDetail();
-        var selectedNode = event.cyTarget;
-        screenNodeDetail(selectedNode);     
+        if(cy.nodes(":selected").length == 1){
+            showNodeDetail();
+            var selectedNode = event.cyTarget;
+            screenNodeDetail(selectedNode);
+        }
+        else{
+            hideNodeDetail();
+        }
     });
     cy.on('unselect', 'node', function(){
-        hideNodeDetail();
+        if(cy.nodes(":selected").length == 1){
+            showNodeDetail();
+            screenNodeDetail(cy.nodes(":selected"));
+        }
+        else{
+            hideNodeDetail();
+        }
     });
 };
 function loadCanvas(){
@@ -541,6 +552,7 @@ function screenNodeDetail(selectedNode){
     var dataToScreenCurrent = animatedData[keyframeNumber];
     var displacementX = 0;
     var displacementY = 0;
+    
     if (dataToScreenPrev != null) {
         var theId = selectedNode.data('id');
         var pNodePrev = dataToScreenPrev[theId];

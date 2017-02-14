@@ -510,10 +510,13 @@ slider.on("change", function(evt) {
     if($('#forcesCheck').is(":checked")){
         screenForces(keyframeNumber);
     }
-    if(cy.nodes(":selected").length !== 0){
+    if(cy.nodes(":selected").length == 1){
         $('#nodeDetail').clearCanvas();
         var selectedNode = cy.nodes(":selected");
         screenNodeDetail(selectedNode);  
+    }
+    else{
+        hideNodeDetail();
     }
 });
 
