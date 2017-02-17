@@ -388,6 +388,25 @@ $("body").on("change", "#file-input", function (e) {
         //       console.log(JSON.stringify(graphmlConverter.objects[1][0]));
         refreshCytoscape(cytoscapeJsGraph);
         
+        loadCanvas();
+        div = document.getElementById("cy");
+        var node = div.childNodes[1];
+        div.removeChild(node);
+        div.appendChild(node);
+
+        slider.setAttribute('min', -1);
+        slider.setAttribute('max', -1);
+        slider.setValue(-1, false, true);
+        animatedData = [];
+        numberOfKeyframes = 0;
+        
+        editForces();
+        $("#navigator").empty();
+        var naviOptions = {
+            container: $("#navigator")
+        };
+        cy.navigator(naviOptions);  
+        hideNodeDetail();
     };
     reader.readAsText(file);
     setFileContent(file.name);
