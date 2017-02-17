@@ -253,7 +253,7 @@ var COSEBilkentLayout = Backbone.View.extend({
         // Whether to fit the network view after when done
         fit: true,
         // Padding on fit
-        padding: 10,
+        padding: 20,
         // Whether to enable incremental mode
         randomize: true,
         // Node repulsion (non overlapping) multiplier
