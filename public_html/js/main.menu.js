@@ -427,22 +427,23 @@ $("#new").click(function(e){
 
 
 $("#save-as-png").click(function(evt){
-    var pngContent = cy.png({bg: '#ffffff', full : false});
 
+    var tempCy = document.getElementById('cy');
     var tempCanvas = document.createElement('canvas');
-    tempCanvas.width = 1000;
-    tempCanvas.height = 590;
+    tempCanvas.width = tempCy.offsetWidth;
+    tempCanvas.height = tempCy.offsetHeight;
     var ctx = tempCanvas.getContext("2d");
     
+    var pngContent = cy.png({bg: '#ffffff', maxWidth: tempCy.offsetWidth, maxHeight: tempCy.offsetHeight, full : false});
     var image = new Image();
     image.src = pngContent;
     ctx.drawImage(image, 0, 0);
     var forceCanvas = document.getElementById('forceCanvas');
     ctx.drawImage(forceCanvas, 0, 0);
  
-    var img  = tempCanvas.toDataURL("image/jpeg");
+    var img  = tempCanvas.toDataURL("image/png");
     this.href = img;
-    this.download = "layout.jpeg";
+    this.download = "layout.png";
 });
 
 var loadSample = function(fileName){

@@ -374,7 +374,7 @@ var screenNodes = function(keyframeNumber){
                 y: dummyParent.y
             };
           }
-          var theId = ele.data('id');
+          var theId = ele.data('id');          
           var pNode = dataToScreen[theId];
           var temp = this;
           while (pNode == null) {
