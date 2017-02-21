@@ -503,11 +503,13 @@ var slider = new Slider('#slider', {
     min: -1,
     max: -1,
     value: -1,
-    tooltip: 'hide'
+    tooltip: 'hide',
+    active: false
 });
 
 var keyframeNumber;
 slider.on("change", function(evt) {
+    slider.setAttribute("active", true);
     $('#forceCanvas').clearCanvas();
     keyframeNumber = evt.newValue;
     screenNodes(keyframeNumber);

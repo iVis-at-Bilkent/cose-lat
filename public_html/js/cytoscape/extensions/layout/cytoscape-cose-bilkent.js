@@ -190,7 +190,7 @@ CoSELayout.prototype.runSpringEmbedder = function () {
     this.calcSpringForces();
     this.calcRepulsionForces();
     this.calcGravitationalForces();
-    this.moveNodes();
+    var nodesDetail = this.moveNodes();
     this.animate();
     if (FDLayoutConstants.ANIMATE === 'during' && this.totalIterations % animationPeriod == 0) {
       for (var i = 0; i < 1e7; i++) {
@@ -209,7 +209,15 @@ CoSELayout.prototype.runSpringEmbedder = function () {
           x: rect.getCenterX(),
           y: rect.getCenterY(),
           w: rect.width,
-          h: rect.height
+          h: rect.height,
+          springForceX: nodesDetail[i].springForceX,
+          springForceY: nodesDetail[i].springForceY,
+          repulsionForceX: nodesDetail[i].repulsionForceX,
+          repulsionForceY: nodesDetail[i].repulsionForceY,
+          gravitationForceX: nodesDetail[i].gravitationForceX,
+          gravitationForceY: nodesDetail[i].gravitationForceY,
+          displacementX: nodesDetail[i].displacementX,
+          displacementY: nodesDetail[i].displacementY
         };
       }
       broadcast({pData: pData});
@@ -538,6 +546,16 @@ CoSENode.prototype.move = function ()
   layout.totalDisplacement +=
           Math.abs(this.displacementX) + Math.abs(this.displacementY);
 
+  var nodeData = {
+      springForceX: this.springForceX,
+      springForceY: this.springForceY,
+      repulsionForceX: this.repulsionForceX,
+      repulsionForceY: this.repulsionForceY,
+      gravitationForceX: this.gravitationForceX,
+      gravitationForceY: this.gravitationForceY,
+      displacementX: this.displacementX,
+      displacementY: this.displacementY
+  }
   this.springForceX = 0;
   this.springForceY = 0;
   this.repulsionForceX = 0;
@@ -546,6 +564,8 @@ CoSENode.prototype.move = function ()
   this.gravitationForceY = 0;
   this.displacementX = 0;
   this.displacementY = 0;
+  
+  return nodeData;
 };
 
 CoSENode.prototype.propogateDisplacementToChildren = function (dX, dY)
@@ -801,13 +821,14 @@ FDLayout.prototype.calcGravitationalForces = function () {
 FDLayout.prototype.moveNodes = function () {
   var lNodes = this.getAllNodes();
   var node;
-
+  var nodesData = [];
   for (var i = 0; i < lNodes.length; i++)
   {
     node = lNodes[i];
-    node.move();
+    nodesData[i] = node.move();
   }
-}
+  return nodesData;
+};
 
 FDLayout.prototype.calcSpringForce = function (edge, idealLength) {
   var sourceNode = edge.getSource();

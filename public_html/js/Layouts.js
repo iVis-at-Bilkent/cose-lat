@@ -417,24 +417,24 @@ var screenForces = function(keyframeNumber){
 //            drawForce(positionX, positionY, gravityForceX, gravityForceY, 3);
 //          }
 //          else{
-//            var theId = ele.data('id');
-//            var pNode = dataToScreen[theId];
-//            var temp = this;
-//            while (pNode == null) {
-//              temp = temp.parent()[0];
-//              pNode = dataToScreen[temp.id()];
-//              dataToScreen[theId] = pNode;
-//            }
+            var theId = ele.data('id');
+            var pNode = dataToScreen[theId];
+            var temp = this;
+            while (pNode == null) {
+              temp = temp.parent()[0];
+              pNode = dataToScreen[temp.id()];
+              dataToScreen[theId] = pNode;
+            }
 
                 var positionX = ele.renderedPosition('x');
                 var positionY = ele.renderedPosition('y');
-                var springForceX = 35;
-                var springForceY = 40;
-                var repulsionForceX = 45;
-                var repulsionForceY = -30;
-                var gravityForceX = -40;
-                var gravityForceY = -50;
-            
+                var springForceX = pNode.springForceX;
+                var springForceY = pNode.springForceY;
+                var repulsionForceX = pNode.repulsionForceX;
+                var repulsionForceY = pNode.repulsionForceY;
+                var gravityForceX = pNode.gravitationForceX;
+                var gravityForceY = pNode.gravitationForceY;
+
                 var canvas = $('#forceCanvas');
                 drawForce(canvas, positionX, positionY, springForceX, springForceY, 1);
                 drawForce(canvas, positionX, positionY, repulsionForceX, repulsionForceY, 2);
@@ -481,7 +481,7 @@ function editForces(){
         }
     });
     cy.on('select','node', function(event){
-        if(cy.nodes(":selected").length == 1){
+        if(cy.nodes(":selected").length == 1 && slider.getAttribute("active")){
             showNodeDetail();
             var selectedNode = event.cyTarget;
             screenNodeDetail(selectedNode);
@@ -510,7 +510,19 @@ function loadCanvas(){
     canvas.style.position = "absolute";
     div.appendChild(canvas);
 };
-function screenNodeDetail(selectedNode){      
+function screenNodeDetail(selectedNode){
+    var dataToScreen = animatedData[keyframeNumber];
+    var pNode;
+    if (dataToScreen != null) {
+        var theId = selectedNode.data('id');
+        pNode = dataToScreen[theId];
+        var temp = this;
+        while (pNode == null) {
+            temp = temp.parent()[0];
+            pNode = dataToScreen[temp.id()];
+            dataToScreen[theId] = pNode;
+        }
+    }
     $('#nodeDetail').drawText({
         name: 'nodeName',
         fillStyle: '#36c',
@@ -527,7 +539,7 @@ function screenNodeDetail(selectedNode){
         x: 10, y: 70,
         fontSize: '11pt',
         fontFamily: 'Arial',
-        text: 'Spring: 0.00, 0.00'
+        text: 'Spring: '.concat((pNode.springForceX).toFixed(2), ', ', (pNode.springForceY).toFixed(2))
     });
     $('#nodeDetail').drawText({
         name: 'repulsionForce',
@@ -536,7 +548,7 @@ function screenNodeDetail(selectedNode){
         x: 10, y: 90,
         fontSize: '11pt',
         fontFamily: 'Arial',
-        text: 'Repulsion: 0.00, 0.00'
+        text: 'Repulsion: '.concat((pNode.repulsionForceX).toFixed(2), ', ', (pNode.repulsionForceY).toFixed(2))
     });
     $('#nodeDetail').drawText({
         name: 'gravityForce',
@@ -545,21 +557,21 @@ function screenNodeDetail(selectedNode){
         x: 10, y: 110,
         fontSize: '11pt',
         fontFamily: 'Arial',
-        text: 'Gravity: 0.00, 0.00'
+        text: 'Gravitation: '.concat((pNode.gravitationForceX).toFixed(2), ', ', (pNode.gravitationForceY).toFixed(2))
     });        
     var canvas = $('#nodeDetail');
-    var dataToScreenPrev = animatedData[keyframeNumber-1];
-    var dataToScreenCurrent = animatedData[keyframeNumber];
-    var displacementX = 0;
-    var displacementY = 0;
-    
-    if (dataToScreenPrev != null) {
-        var theId = selectedNode.data('id');
-        var pNodePrev = dataToScreenPrev[theId];
-        var pNodeCurrent = dataToScreenCurrent[theId];
-        displacementX = pNodeCurrent.x - pNodePrev.x;
-        displacementY = pNodeCurrent.y - pNodePrev.y;
-    }
+//    var dataToScreenPrev = animatedData[keyframeNumber-1];
+//    var dataToScreenCurrent = animatedData[keyframeNumber];
+//    var displacementX = 0;
+//    var displacementY = 0;
+//    
+//    if (dataToScreenPrev != null) {
+//        var theId = selectedNode.data('id');
+//        var pNodePrev = dataToScreenPrev[theId];
+//        var pNodeCurrent = dataToScreenCurrent[theId];
+//        displacementX = pNodeCurrent.x - pNodePrev.x;
+//        displacementY = pNodeCurrent.y - pNodePrev.y;
+//    }
     $('#nodeDetail').drawText({
         name: 'displacement',
         fillStyle: '#967117',
@@ -567,11 +579,11 @@ function screenNodeDetail(selectedNode){
         x: 10, y: 130,
         fontSize: '11pt',
         fontFamily: 'Arial',
-        text: 'Displacement: '.concat(displacementX.toFixed(2), ', ', displacementY.toFixed(2))
+        text: 'Displacement: '.concat((pNode.displacementX).toFixed(2), ', ', (pNode.displacementY).toFixed(2))
     });
-    drawForce(canvas, 230, 85, 35, 40, 1);
-    drawForce(canvas, 230, 85, 45, -30, 2);
-    drawForce(canvas, 230, 85, -40, -50, 3);
+    drawForce(canvas, 230, 85, pNode.springForceX, pNode.springForceY, 1);
+    drawForce(canvas, 230, 85, pNode.repulsionForceX, pNode.repulsionForceY, 2);
+    drawForce(canvas, 230, 85, pNode.gravitationForceX, pNode.gravitationForceY, 3);
 };
 
 function showNodeDetail(){
