@@ -364,9 +364,12 @@ $("#perform-layout").click(function (e) {
     cy.nodes().data("ports", []);
     cy.edges().data("portsource", []);
     cy.edges().data("porttarget", []);
-    coseBilkentLayoutProp.applyLayout();
+    
+    cy.elements().unselect();
     slider.setAttribute('min', -1);
     slider.setValue(-1, false, true);
+    slider.setAttribute("active", false);
+    coseBilkentLayoutProp.applyLayout();
 });
 var atts;
 
@@ -397,6 +400,7 @@ $("body").on("change", "#file-input", function (e) {
         slider.setAttribute('min', -1);
         slider.setAttribute('max', -1);
         slider.setValue(-1, false, true);
+        slider.setAttribute("active", false);
         animatedData = [];
         numberOfKeyframes = 0;
         
@@ -467,6 +471,7 @@ var loadSample = function(fileName){
     slider.setAttribute('min', -1);
     slider.setAttribute('max', -1);
     slider.setValue(-1, false, true);
+    slider.setAttribute("active", false);
     animatedData = [];
     numberOfKeyframes = 0;
 

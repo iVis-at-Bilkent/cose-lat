@@ -432,13 +432,19 @@ var screenForces = function(keyframeNumber){
                 var springForceY = pNode.springForceY;
                 var repulsionForceX = pNode.repulsionForceX;
                 var repulsionForceY = pNode.repulsionForceY;
-                var gravityForceX = pNode.gravitationForceX;
-                var gravityForceY = pNode.gravitationForceY;
+                var gravitationForceX = pNode.gravitationForceX;
+                var gravitationForceY = pNode.gravitationForceY;
 
                 var canvas = $('#forceCanvas');
-                drawForce(canvas, positionX, positionY, springForceX, springForceY, 1);
-                drawForce(canvas, positionX, positionY, repulsionForceX, repulsionForceY, 2);
-                drawForce(canvas, positionX, positionY, gravityForceX, gravityForceY, 3);
+                if(springForceX != 0 && springForceY != 0){
+                    drawForce(canvas, positionX, positionY, springForceX, springForceY, 1);
+                }
+                if(repulsionForceX != 0 && repulsionForceY != 0){
+                    drawForce(canvas, positionX, positionY, repulsionForceX, repulsionForceY, 2);
+                }
+                if(gravitationForceX != 0 && gravitationForceY != 0){
+                    drawForce(canvas, positionX, positionY, gravitationForceX, gravitationForceY, 3);
+                }
 //          }
         });
   }
@@ -450,7 +456,7 @@ function drawForce(canvas, posX, posY, forceX, forceY, type){
         zoom = 1;
     }
     canvas.drawLine({
-      strokeStyle: (type===1)?'#FF0000':(type===2)?'#0000FF':'#8DB600',
+      strokeStyle: (type==1)?'#FF0000':(type==2)?'#0000FF':'#8DB600',
       strokeWidth: 4*zoom,
       rounded: true,
       endArrow: true,
@@ -581,9 +587,15 @@ function screenNodeDetail(selectedNode){
         fontFamily: 'Arial',
         text: 'Displacement: '.concat((pNode.displacementX).toFixed(2), ', ', (pNode.displacementY).toFixed(2))
     });
-    drawForce(canvas, 230, 85, pNode.springForceX, pNode.springForceY, 1);
-    drawForce(canvas, 230, 85, pNode.repulsionForceX, pNode.repulsionForceY, 2);
-    drawForce(canvas, 230, 85, pNode.gravitationForceX, pNode.gravitationForceY, 3);
+    if(pNode.springForceX != 0 && pNode.springForceY != 0){
+        drawForce(canvas, 230, 85, pNode.springForceX, pNode.springForceY, 1);
+    }
+    if(pNode.repulsionForceX != 0 && pNode.repulsionForceY != 0){
+        drawForce(canvas, 230, 85, pNode.repulsionForceX, pNode.repulsionForceY, 2);
+    }
+    if(pNode.gravitationForceX != 0 && pNode.gravitationForceY != 0){
+        drawForce(canvas, 230, 85, pNode.gravitationForceX, pNode.gravitationForceY, 3);
+    }
 };
 
 function showNodeDetail(){
