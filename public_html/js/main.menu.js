@@ -405,6 +405,7 @@ $("body").on("change", "#file-input", function (e) {
         numberOfKeyframes = 0;
         
         editForces();
+        normalizeForces();
         $("#navigator").empty();
         var naviOptions = {
             container: $("#navigator")
@@ -476,6 +477,7 @@ var loadSample = function(fileName){
     numberOfKeyframes = 0;
 
     editForces();
+    normalizeForces();
     $("#navigator").empty();
     var naviOptions = {
         container: $("#navigator")

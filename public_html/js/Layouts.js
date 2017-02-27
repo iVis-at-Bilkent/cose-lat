@@ -26,6 +26,7 @@ $(function () {
     cy.navigator(naviOptions);
         
     editForces();
+    normalizeForces();
 //    var panProps = ({
 //        zoomFactor: 0.05, // zoom factor per zoom tick
 //        zoomDelay: 45, // how many ms between zoom ticks
@@ -349,12 +350,6 @@ var COSEBilkentLayout = Backbone.View.extend({
 
 var whitenBackgrounds = function(){
     $("#cose-bilkent").css("background-color", "white");
-/*    
-    $("#cose").css("background-color", "white");
-    $("#cola").css("background-color", "white");
-    $("#springy").css("background-color", "white");
-    $("#arbor").css("background-color", "white");
-*/
 };
 
 var animatedData = [];
@@ -362,6 +357,31 @@ var numberOfKeyframes;
 window.addEventListener('send', function (e) { 
     animatedData.push(e.detail);
 }, false);
+
+var normalizeRatio;
+var normalizeRatio2;
+var normalizeForces = function(){
+    cy.on('layoutstop', function(){
+       var normalizedData;
+       var maxForce = -10000;
+       var minForce = 10000;
+       for(i = 0; i<animatedData.length; i++){
+           for(j = 0; j<Object.values(animatedData[i]).length; j++){
+               var tempMax = Math.max(Object.values(animatedData[i])[j].springForceX, Object.values(animatedData[i])[j].springForceY, Object.values(animatedData[i])[j].repulsionForceX, Object.values(animatedData[i])[j].repulsionForceY, Object.values(animatedData[i])[j].gravitationForceX, Object.values(animatedData[i])[j].gravitationForceY);                        
+               var tempMin = Math.min(Object.values(animatedData[i])[j].springForceX, Object.values(animatedData[i])[j].springForceY, Object.values(animatedData[i])[j].repulsionForceX, Object.values(animatedData[i])[j].repulsionForceY, Object.values(animatedData[i])[j].gravitationForceX, Object.values(animatedData[i])[j].gravitationForceY);                        
+            if(tempMax > maxForce){
+                maxForce = tempMax;
+            }
+            if(tempMin < minForce){
+                minForce = tempMin;
+            }
+           }
+       }
+       normalizeRatio = Math.max(Math.abs(maxForce), Math.abs(minForce)) / 60;
+       normalizeRatio2 = Math.max(Math.abs(maxForce), Math.abs(minForce)) / 100;
+       console.log(minForce, ", ", maxForce, ", ", normalizeRatio); 
+    });
+};
 
 var screenNodes = function(keyframeNumber){
     var dataToScreen = animatedData[keyframeNumber];
@@ -428,12 +448,12 @@ var screenForces = function(keyframeNumber){
 
                 var positionX = ele.renderedPosition('x');
                 var positionY = ele.renderedPosition('y');
-                var springForceX = pNode.springForceX;
-                var springForceY = pNode.springForceY;
-                var repulsionForceX = pNode.repulsionForceX;
-                var repulsionForceY = pNode.repulsionForceY;
-                var gravitationForceX = pNode.gravitationForceX;
-                var gravitationForceY = pNode.gravitationForceY;
+                var springForceX = pNode.springForceX / normalizeRatio2;
+                var springForceY = pNode.springForceY / normalizeRatio2;
+                var repulsionForceX = pNode.repulsionForceX / normalizeRatio2;
+                var repulsionForceY = pNode.repulsionForceY / normalizeRatio2;
+                var gravitationForceX = pNode.gravitationForceX / normalizeRatio2;
+                var gravitationForceY = pNode.gravitationForceY / normalizeRatio2;
 
                 var canvas = $('#forceCanvas');
                 if(springForceX != 0 && springForceY != 0){
@@ -457,10 +477,10 @@ function drawForce(canvas, posX, posY, forceX, forceY, type){
     }
     canvas.drawLine({
       strokeStyle: (type==1)?'#FF0000':(type==2)?'#0000FF':'#8DB600',
-      strokeWidth: 4*zoom,
+      strokeWidth: 3*zoom,
       rounded: true,
       endArrow: true,
-      arrowRadius: 10*zoom,
+      arrowRadius: 5*zoom,
       arrowAngle: 90,
       x1: posX, y1: posY,
       x2: posX + forceX*zoom, y2: posY + forceY*zoom
@@ -529,6 +549,17 @@ function screenNodeDetail(selectedNode){
             dataToScreen[theId] = pNode;
         }
     }
+    var canvas = $('#nodeDetail');
+    if(pNode.springForceX != 0 && pNode.springForceY != 0){
+        drawForce(canvas, 225, 80, pNode.springForceX/normalizeRatio, pNode.springForceY/normalizeRatio, 1);
+    }
+    if(pNode.repulsionForceX != 0 && pNode.repulsionForceY != 0){
+        drawForce(canvas, 225, 80, pNode.repulsionForceX/normalizeRatio, pNode.repulsionForceY/normalizeRatio, 2);
+    }
+    if(pNode.gravitationForceX != 0 && pNode.gravitationForceY != 0){
+        drawForce(canvas, 225, 80, pNode.gravitationForceX/normalizeRatio, pNode.gravitationForceY/normalizeRatio, 3);
+    }
+//    drawForce(canvas, 225, 80, -60, -60, 3);
     $('#nodeDetail').drawText({
         name: 'nodeName',
         fillStyle: '#36c',
@@ -545,7 +576,7 @@ function screenNodeDetail(selectedNode){
         x: 10, y: 70,
         fontSize: '11pt',
         fontFamily: 'Arial',
-        text: 'Spring: '.concat((pNode.springForceX).toFixed(2), ', ', (pNode.springForceY).toFixed(2))
+        text: 'SF: '.concat((pNode.springForceX).toFixed(2), ', ', (pNode.springForceY).toFixed(2))
     });
     $('#nodeDetail').drawText({
         name: 'repulsionForce',
@@ -554,7 +585,7 @@ function screenNodeDetail(selectedNode){
         x: 10, y: 90,
         fontSize: '11pt',
         fontFamily: 'Arial',
-        text: 'Repulsion: '.concat((pNode.repulsionForceX).toFixed(2), ', ', (pNode.repulsionForceY).toFixed(2))
+        text: 'RF: '.concat((pNode.repulsionForceX).toFixed(2), ', ', (pNode.repulsionForceY).toFixed(2))
     });
     $('#nodeDetail').drawText({
         name: 'gravityForce',
@@ -563,9 +594,8 @@ function screenNodeDetail(selectedNode){
         x: 10, y: 110,
         fontSize: '11pt',
         fontFamily: 'Arial',
-        text: 'Gravitation: '.concat((pNode.gravitationForceX).toFixed(2), ', ', (pNode.gravitationForceY).toFixed(2))
+        text: 'GF: '.concat((pNode.gravitationForceX).toFixed(2), ', ', (pNode.gravitationForceY).toFixed(2))
     });        
-    var canvas = $('#nodeDetail');
 //    var dataToScreenPrev = animatedData[keyframeNumber-1];
 //    var dataToScreenCurrent = animatedData[keyframeNumber];
 //    var displacementX = 0;
@@ -585,17 +615,8 @@ function screenNodeDetail(selectedNode){
         x: 10, y: 130,
         fontSize: '11pt',
         fontFamily: 'Arial',
-        text: 'Displacement: '.concat((pNode.displacementX).toFixed(2), ', ', (pNode.displacementY).toFixed(2))
+        text: 'D: '.concat((pNode.displacementX).toFixed(2), ', ', (pNode.displacementY).toFixed(2))
     });
-    if(pNode.springForceX != 0 && pNode.springForceY != 0){
-        drawForce(canvas, 230, 85, pNode.springForceX, pNode.springForceY, 1);
-    }
-    if(pNode.repulsionForceX != 0 && pNode.repulsionForceY != 0){
-        drawForce(canvas, 230, 85, pNode.repulsionForceX, pNode.repulsionForceY, 2);
-    }
-    if(pNode.gravitationForceX != 0 && pNode.gravitationForceY != 0){
-        drawForce(canvas, 230, 85, pNode.gravitationForceX, pNode.gravitationForceY, 3);
-    }
 };
 
 function showNodeDetail(){
