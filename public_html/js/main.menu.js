@@ -525,6 +525,7 @@ slider.on("change", function(evt) {
     }
     if(cy.nodes(":selected").length == 1){
         $('#nodeDetail').clearCanvas();
+        showNodeDetail();
         var selectedNode = cy.nodes(":selected");
         screenNodeDetail(selectedNode);  
     }
@@ -544,7 +545,7 @@ $('#forcesCheck').change(function () {
 
 $('#fitCheck').change(function () {
     if($('#fitCheck').is(":checked") && slider.getAttribute("active")){
-        if(cy.nodes(":selected").length == 1){
+        if(cy.nodes(":selected").length == 1 && cy.nodes(":selected").isParent() == false){
             cy.fit(cy.nodes(":selected"), 250);
         }
         else{             
@@ -554,8 +555,7 @@ $('#fitCheck').change(function () {
     else{
         if(slider.getAttribute("active")){
             var tempLayout = new COSEBilkentLayout();
-            if (tempLayout.currentLayoutProperties.fit)
-                cy.fit(cy.nodes(), tempLayout.currentLayoutProperties.padding); 
+            cy.fit(cy.nodes(), tempLayout.currentLayoutProperties.padding); 
         }
     }
 });

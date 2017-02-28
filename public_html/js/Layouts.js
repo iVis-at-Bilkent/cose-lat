@@ -409,7 +409,7 @@ var screenNodes = function(keyframeNumber){
         });
       
         if($('#fitCheck').is(":checked") && cy.nodes(":selected").length > 0){
-            if(cy.nodes(":selected").length == 1){
+            if(cy.nodes(":selected").length == 1 && cy.nodes(":selected").isParent() == false){
                 cy.fit(cy.nodes(":selected"), 250);
             }
             else{             
@@ -418,8 +418,7 @@ var screenNodes = function(keyframeNumber){
         }
         else {
            var tempLayout = new COSEBilkentLayout();
-           if (tempLayout.currentLayoutProperties.fit)
-                cy.fit(cy.nodes(), tempLayout.currentLayoutProperties.padding); 
+           cy.fit(cy.nodes(), tempLayout.currentLayoutProperties.padding); 
         }
 //        if (!ready) {
 //            ready = true;
@@ -533,7 +532,7 @@ function editForces(){
 //                y = y + ele.position('y');
 //            });
 //            cy.zoom({level: 2.0, position: {x: x/numberOfSelected, y: y/numberOfSelected}});
-            if(cy.nodes(":selected").length == 1){
+            if(cy.nodes(":selected").length == 1 && cy.nodes(":selected").isParent() == false){
                 cy.fit(cy.nodes(":selected"), 250);
             }
             else{               
@@ -542,7 +541,7 @@ function editForces(){
         }
     });
     cy.on('unselect', 'node', function(){
-        if(cy.nodes(":selected").length == 1){
+        if(cy.nodes(":selected").length == 1 && slider.getAttribute("active")){
             showNodeDetail();
             screenNodeDetail(cy.nodes(":selected"));
         }
@@ -550,7 +549,7 @@ function editForces(){
             hideNodeDetail();
         }
         if($('#fitCheck').is(":checked") && slider.getAttribute("active") && cy.nodes(":selected").length != 0){
-            if(cy.nodes(":selected").length == 1){
+            if(cy.nodes(":selected").length == 1 && cy.nodes(":selected").isParent() == false){
                 cy.fit(cy.nodes(":selected"), 250);
             }
             else{                
@@ -558,9 +557,10 @@ function editForces(){
             }
         }
         else{
-            var tempLayout = new COSEBilkentLayout();
-            if (tempLayout.currentLayoutProperties.fit)
-                cy.fit(cy.nodes(), tempLayout.currentLayoutProperties.padding);
+            if(slider.getAttribute("active")){
+                var tempLayout = new COSEBilkentLayout();
+                cy.fit(cy.nodes(), tempLayout.currentLayoutProperties.padding); 
+            }
         }
     });
 };
