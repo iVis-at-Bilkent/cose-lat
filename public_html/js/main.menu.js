@@ -542,6 +542,24 @@ $('#forcesCheck').change(function () {
     }
 });
 
+$('#fitCheck').change(function () {
+    if($('#fitCheck').is(":checked") && slider.getAttribute("active")){
+        if(cy.nodes(":selected").length == 1){
+            cy.fit(cy.nodes(":selected"), 250);
+        }
+        else{             
+            cy.fit(cy.nodes(":selected"), 100);
+        }
+    }
+    else{
+        if(slider.getAttribute("active")){
+            var tempLayout = new COSEBilkentLayout();
+            if (tempLayout.currentLayoutProperties.fit)
+                cy.fit(cy.nodes(), tempLayout.currentLayoutProperties.padding); 
+        }
+    }
+});
+
 var speedSlider = new Slider('#speedSlider', {
     orientation: "horizontal",
     step: 250,

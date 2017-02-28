@@ -149,7 +149,7 @@
     <div class="row no-gutter">
         <div class="col-lg-4 text-right">
             <button type="button" id = "perform-layout" class="btn btn-info btn-md">Perform Layout</button>
-            <button type="button" id = "layout-properties" class="btn btn-info btn-md text-left"><span class="glyphicon glyphicon-cog"></span></button>
+            <button type="button" id = "layout-properties" class="btn btn-info btn-md text-left" title="Layout Properties"><span class="glyphicon glyphicon-option-horizontal"></span></button>
         </div>
         <div class="col-lg-5 text-right">
             <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
@@ -173,9 +173,14 @@
                 </a>
             </div>
         </div>
-        <div class="col-lg-1 text-right">
-            <label class="checkbox-inline text-primary"><input id="forcesCheck" type="checkbox">Forces</label>
-        </div>
+        <div class="col-lg-1 text-right dropup">
+            <button class="btn btn-info dropdown-toggle" data-toggle="dropdown" data-placement="top" title="Animation Options"><span class="glyphicon glyphicon-cog"></span></button>
+            <ul class="dropdown-menu">
+                <li><label for="forcesCheck" class="checkbox-inline text-justify" style="margin-left:10px; margin-top: 6px"><input type="checkbox" id="forcesCheck">Show Forces</label></li>                                
+                <li role="separator" class="divider"></li>
+                <li><label for="fitCheck" class="checkbox-inline text-justify" style="margin-left:10px; margin-bottom: 6px" ><input type="checkbox" id="fitCheck">Fit to Selected</label></li>                
+            </ul>
+        </div>    
         <div class="col-lg-3  text-left">
             <div class="row text-center">
                 <div class="col-lg-12">
