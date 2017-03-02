@@ -61,7 +61,7 @@ function refreshCytoscape(graphData) { // on dom ready
                 'background-color': '#aaa',
                 'border-width': 1,
                 'border-color': 'black',
-                'text-valign': 'center',
+                'text-valign': 'bottom',
                 'color': 'white',
                 'text-outline-width': 2,
                 'text-outline-color': '#888',

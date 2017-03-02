@@ -585,12 +585,12 @@ $("#playButton").click(function (e){
     var $el = $(this);
     var currentFrameNumber = slider.getValue();
     if(onPlay === false && numberOfKeyframes !== 0){
-       $el.find('span').toggleClass('glyphicon glyphicon-pause glyphicon glyphicon-play');
+       $el.find('span').toggleClass('fa fa-pause fa-fw fa fa-play fa-fw');
        onPlay = true;
        slide(currentFrameNumber, onPlay);     
     }
     else if(onPlay === true){
-       $el.find('span').toggleClass('glyphicon glyphicon-play glyphicon glyphicon-pause');
+       $el.find('span').toggleClass('fa fa-play fa-fw fa fa-pause fa-fw');
        onPlay = false;
        clearTimeout(timeout);
     }
@@ -600,7 +600,7 @@ $("#stopButton").click(function (e){
     numberOfKeyframes = animatedData.length;
     if(numberOfKeyframes > 0){
        if(onPlay === true){
-           $("#playButton").find('span').toggleClass('glyphicon glyphicon-play glyphicon glyphicon-pause');
+           $("#playButton").find('span').toggleClass('fa fa-play fa-fw fa fa-pause fa-fw');
        }
        onPlay = false;
        clearTimeout(timeout);
@@ -679,7 +679,7 @@ function slide(i, check) {
          slide(i, check);              
       }
       else if(i>=numberOfKeyframes - 1){
-         $("#playButton").find('span').toggleClass('glyphicon glyphicon-play glyphicon glyphicon-pause');
+         $("#playButton").find('span').toggleClass('fa fa-play fa-fw fa fa-pause fa-fw');
          onPlay = false;
          clearTimeout(timeout);
       }
