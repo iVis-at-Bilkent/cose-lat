@@ -251,6 +251,8 @@ var COSEBilkentLayout = Backbone.View.extend({
         // Called on `layoutstop`
         stop: function () {
         },
+        // number of ticks per frame; higher is faster but more jerky
+        refresh: 30, 
         // Whether to fit the network view after when done
         fit: true,
         // Padding on fit
@@ -312,6 +314,7 @@ var COSEBilkentLayout = Backbone.View.extend({
         $(self.el).dialog({width:300, closeText: ""}).prev(".ui-dialog-titlebar").css("background","#5bc0de");;
 
         $("#save-layout").click( function (evt) {
+            self.currentLayoutProperties.refresh = Number(document.getElementById("refresh").value);
             self.currentLayoutProperties.padding = Number(document.getElementById("padding").value);
             self.currentLayoutProperties.nodeRepulsion = Number(document.getElementById("node-repulsion").value);
             self.currentLayoutProperties.idealEdgeLength = Number(document.getElementById("ideal-edge-length").value);
@@ -324,7 +327,7 @@ var COSEBilkentLayout = Backbone.View.extend({
             self.currentLayoutProperties.gravityRangeCompound = Number(document.getElementById("gravity-range-compound").value);             
             self.currentLayoutProperties.gravityCompound = Number(document.getElementById("gravity-compound").value);            
             self.currentLayoutProperties.gravityRange = Number(document.getElementById("gravity-range").value);            
-            self.currentLayoutProperties.fit = document.getElementById("fit").checked;            
+            //self.currentLayoutProperties.fit = document.getElementById("fit").checked;            
             self.currentLayoutProperties.randomize = document.getElementById("randomize").checked;            
             self.currentLayoutProperties.tile = document.getElementById("tile").checked;
             if(document.getElementById("animate").checked === true){
@@ -497,19 +500,7 @@ function drawForce(canvas, posX, posY, forceX, forceY, type){
 }
 
 function editForces(){
-    cy.on('zoom', function(){
-        $('#forceCanvas').clearCanvas();   
-        if($('#forcesCheck').is(":checked")){
-            screenForces(keyframeNumber);
-        }
-    });
-    cy.on('pan', function(){
-        $('#forceCanvas').clearCanvas();   
-        if($('#forcesCheck').is(":checked")){
-            screenForces(keyframeNumber);
-        }
-    });
-    cy.on('position','node', function(){
+    cy.on('zoom pan position', function(){
         $('#forceCanvas').clearCanvas();   
         if($('#forcesCheck').is(":checked")){
             screenForces(keyframeNumber);
@@ -525,13 +516,6 @@ function editForces(){
             hideNodeDetail();
         }
         if($('#fitCheck').is(":checked") && slider.getAttribute("active")){
-//            var numberOfSelected = cy.nodes(":selected").length;
-//            var x = 0, y = 0;
-//            cy.nodes(":selected").forEach(function(ele){
-//                x = x + ele.position('x');
-//                y = y + ele.position('y');
-//            });
-//            cy.zoom({level: 2.0, position: {x: x/numberOfSelected, y: y/numberOfSelected}});
             if(cy.nodes(":selected").length == 1 && cy.nodes(":selected").isParent() == false){
                 cy.fit(cy.nodes(":selected"), 250);
             }
@@ -548,18 +532,18 @@ function editForces(){
         else{
             hideNodeDetail();
         }
-        if($('#fitCheck').is(":checked") && slider.getAttribute("active") && cy.nodes(":selected").length != 0){
-            if(cy.nodes(":selected").length == 1 && cy.nodes(":selected").isParent() == false){
-                cy.fit(cy.nodes(":selected"), 250);
+        if($('#fitCheck').is(":checked") && slider.getAttribute("active")){
+            if(cy.nodes(":selected").length != 0){
+                if(cy.nodes(":selected").length == 1 && cy.nodes(":selected").isParent() == false){
+                   cy.fit(cy.nodes(":selected"), 250);
+                }
+                else{                
+                    cy.fit(cy.nodes(":selected"), 100);
+                }
             }
-            else{                
-                cy.fit(cy.nodes(":selected"), 100);
-            }
-        }
-        else{
-            if(slider.getAttribute("active")){
+            else{
                 var tempLayout = new COSEBilkentLayout();
-                cy.fit(cy.nodes(), tempLayout.currentLayoutProperties.padding); 
+                cy.fit(cy.nodes(), tempLayout.currentLayoutProperties.padding);                 
             }
         }
     });
@@ -597,7 +581,6 @@ function screenNodeDetail(selectedNode){
     if(pNode.gravitationForceX != 0 && pNode.gravitationForceY != 0){
         drawForce(canvas, 225, 80, pNode.gravitationForceX/normalizeRatio, pNode.gravitationForceY/normalizeRatio, 3);
     }
-//    drawForce(canvas, 225, 80, -60, -60, 3);
     $('#nodeDetail').drawText({
         name: 'nodeName',
         fillStyle: '#36c',
