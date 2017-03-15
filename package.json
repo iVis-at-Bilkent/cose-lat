@@ -1,0 +1,27 @@
+{
+  "name": "cose-lat",
+  "version": "1.0.0",
+  "description": "A tool for animation during CoSE layout to debug and improve the algorithm.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iVis-at-Bilkent/cose-lat"
+  },
+  "keywords": [
+    "cytoscape",
+    "cose-bilkent"
+  ],
+  "bugs": {
+    "url": "https://github.com/iVis-at-Bilkent/cose-lat/issues"
+  },
+  "homepage": "https://github.com/iVis-at-Bilkent/cose-lat",
+  "dependencies": {
+    "cytoscape-panzoom": "^2.4.1",    
+    "cytoscape-undo-redo": "^1.2.6",
+    "cytoscape-navigator": "^1.0.0",
+    "cytoscape-cose-bilkent": "/hasanbalci/cytoscape.js-cose-bilkent",
+    "cytoscape": "^2.7.16",
+  }
+}
