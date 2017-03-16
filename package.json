@@ -23,5 +23,8 @@
     "cytoscape-navigator": "^1.0.0",
     "cytoscape-cose-bilkent": "hasanbalci/cytoscape.js-cose-bilkent",
     "cytoscape": "^2.7.16"
+  },
+  "devDependencies": {
+    "express": "4.14.0"
   }
 }
