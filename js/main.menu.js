@@ -33,6 +33,11 @@ $("#delete").click(function (e) {
         return;
     }
     ur.do("remove", selectedEles);
+    
+    $('#forceCanvas').clearCanvas();
+    if($('#forcesCheck').is(":checked")){
+        screenForces(keyframeNumber);
+    }
 });
 
 $("#addEdge").click(function (e) {

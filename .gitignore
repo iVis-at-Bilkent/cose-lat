@@ -7,4 +7,5 @@ cytoscape.js-layout-demo.iml
 .idea/modules.xml
 .idea/vcs.xml
 /cose-lat/nbproject/private/
-/nbproject/private/
+/nbproject/*
+node_modules/

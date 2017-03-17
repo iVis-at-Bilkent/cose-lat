@@ -365,7 +365,6 @@ var normalizeRatio;
 var normalizeRatio2;
 var normalizeForces = function(){
     cy.on('layoutstop', function(){
-       var normalizedData;
        var maxForce = -10000;
        var minForce = 10000;
        for(i = 0; i<animatedData.length; i++){
@@ -382,7 +381,6 @@ var normalizeForces = function(){
        }
        normalizeRatio = Math.max(Math.abs(maxForce), Math.abs(minForce)) / 60;
        normalizeRatio2 = Math.max(Math.abs(maxForce), Math.abs(minForce)) / 100;
-       //console.log(minForce, ", ", maxForce, ", ", normalizeRatio); 
     });
 };
 
