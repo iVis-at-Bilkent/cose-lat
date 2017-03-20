@@ -429,10 +429,16 @@ $("#load-file").click(function (e) {
 
 $("#new").click(function(e){
     var graphData = new Object();
-    graphData['nodes'] = undefined;
-    graphData['edges'] = undefined;
+    graphData['nodes'] = [];
+    graphData['edges'] = [];
     refreshCytoscape(graphData);
-
+    normalizeForces();
+    $("#navigator").empty();
+    var naviOptions = {
+        container: $("#navigator")
+    };
+    cy.navigator(naviOptions);  
+    hideNodeDetail();
 });
 
 
