@@ -335,9 +335,9 @@ var COSEBilkentLayout = Backbone.View.extend({
             }
             else {
                 self.currentLayoutProperties.animate = false;
-            }
+            }  
+            iterationRate = self.currentLayoutProperties.refresh;
             $(self.el).dialog('close');
-
         });
 
         $("#default-layout").click( function (evt) {
@@ -426,7 +426,7 @@ var screenNodes = function(keyframeNumber){
 //            cy.one('layoutready', tempLayout.currentLayoutProperties.ready);
 //            cy.trigger({type: 'layoutready', layout: 'cose-bilkent'});
 //        }
-  }
+    }
 };
 //
 var screenForces = function(keyframeNumber){

@@ -372,8 +372,9 @@ $("#perform-layout").click(function (e) {
     
     cy.elements().unselect();
     slider.setAttribute('min', -1);
+    slider.setAttribute('max', -1);
     slider.setValue(-1, false, true);
-    slider.setAttribute("active", false);
+    slider.setAttribute("active", false);    
     coseBilkentLayoutProp.applyLayout();
 });
 var atts;
@@ -515,14 +516,18 @@ $("#sample5").click(function (e){
     loadSample("graph5");
 });
 
+var tempLayout = new COSEBilkentLayout();
+var iterationRate = tempLayout.currentLayoutProperties.refresh;
 var slider = new Slider('#slider', {
     orientation: "horizontal",
     step: 1,
     min: -1,
     max: -1,
     value: -1,
-    tooltip: 'hide',
-    active: false
+    active: false,
+    formatter: function(value) {
+        return 'iteration: ' + (value * iterationRate + iterationRate);
+    }
 });
 
 var keyframeNumber;
