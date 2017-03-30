@@ -498,22 +498,40 @@ var loadSample = function(fileName){
     hideNodeDetail();
 };
 $("#sample0").click(function (e){
-    loadSample("graph0");
+    loadSample("badlayout2c");
 });
 $("#sample1").click(function (e){
-    loadSample("graph1");
+    loadSample("badlayout2b");
 });
 $("#sample2").click(function (e){
-    loadSample("graph2");
+    loadSample("badlayout2d");
 });
 $("#sample3").click(function (e){
-    loadSample("graph3");
+    loadSample("emptycompound.weird.layout");
 });
 $("#sample4").click(function (e){
-    loadSample("graph4");
+    loadSample("RPS6KB1-MTOR-badlay");
 });
 $("#sample5").click(function (e){
-    loadSample("graph5");
+    loadSample("RPS6KB1-MTOR-badlay_org");
+});
+$("#sample6").click(function (e){
+    loadSample("badlayout2e");
+});
+$("#sample7").click(function (e){
+    loadSample("badlayout1");
+});
+$("#sample8").click(function (e){
+    loadSample("badlayout2a");
+});
+$("#sample9").click(function (e){
+    loadSample("AR-TP53-badlayout");
+});
+$("#sample10").click(function (e){
+    loadSample("EGFR");
+});
+$("#sample11").click(function (e){
+    loadSample("graph0");
 });
 
 var tempLayout = new COSEBilkentLayout();

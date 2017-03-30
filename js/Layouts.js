@@ -9,7 +9,7 @@ var setFileContent = function(fileName){
 };
 $(function () {
     loadCanvas();
-    var xmlObject = loadXMLDoc("samples/graph0.xml");
+    var xmlObject = loadXMLDoc("samples/badlayout2c.xml");
     var graphmlConverter = graphmlToJSON(xmlObject);
     atts = graphmlConverter.attributes;
 
@@ -18,7 +18,7 @@ $(function () {
         nodes: graphmlConverter.objects[1],
     };
     refreshCytoscape(cytoscapeJsGraph);
-    setFileContent("graph0.graphml");
+    setFileContent("badlayout2c.graphml");
     
     var naviOptions = {
         container: $("#navigator")
