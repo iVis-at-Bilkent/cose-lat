@@ -532,8 +532,8 @@ function loadCanvas(){
     var canvas = document.createElement('canvas');
     div = document.getElementById("cy"); 
     canvas.id = "forceCanvas";
-    canvas.width = 1000;
-    canvas.height = 590;
+    canvas.width = 1200;
+    canvas.height = 780;
     canvas.style.zIndex = 9;
     canvas.style.position = "absolute";
     div.appendChild(canvas);

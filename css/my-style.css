@@ -1,8 +1,8 @@
 #cy {
     margin: auto;
     border: 1px solid #ddd;
-    height: 590px;
-    width: 1000px;
+    height: 780px;
+    width: 1200px;
     overflow: auto !important;
     border-radius: 0.25em;
     z-index: 10;
@@ -64,14 +64,14 @@ i.shortcut {
     }
 }
 .container {
-    width: 1000px; 
+    width: 1200px; 
 }
 .nav-menu {
     border: 1px solid #ddd;
     border-radius: 0.25em;
     margin: auto;
     height: 40px;
-    width: 1000px;
+    width: 1200px;
 }
 .navbar-header{
     width: 350px;
@@ -125,7 +125,7 @@ i.shortcut {
 #info-content{
     margin: auto;
     height: 25px;
-    width: 1000px;
+    width: 1200px;
     overflow: auto !important;
 }
 .menu-container {
@@ -133,11 +133,11 @@ i.shortcut {
     border-radius: 0.25em;
     margin: auto;
     height: 80px;
-    width: 1000px;
+    width: 1200px;
 }
 .my-nav-bar {
     margin: auto;
-    width: 1000px;
+    width: 1200px;
     overflow: visible !important;
     font-size: 16px !important;
 }
@@ -147,8 +147,8 @@ i.shortcut {
 }
 .cyContainer{
     margin: auto;
-    height: 590px;
-    width: 1000px;
+    height: 780px;
+    width: 1200px;
     border-radius: 6px;
     padding-right: 0 !important;
     padding-left: 0 !important;
@@ -189,7 +189,7 @@ i.shortcut {
 .bottom-bar {
     margin: auto;
     height: 80px;
-    width: 1000px;
+    width: 1200px;
     overflow: visible !important;
     font-size: 14px !important;
 }
@@ -203,7 +203,7 @@ i.shortcut {
     background: white; 
 }
 #sliderID {
-    width: 800px;
+    width: 900px;
     margin-top:5px; 
     margin-bottom:5px;
     border-color: #729fcf;
