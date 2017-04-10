@@ -15,11 +15,11 @@ var handleNode = function (node, tabNum) {
     txt += oneMoreTab;
     txt += '<data key="y">' + node.position("y") + '</data>\n';
 
-    txt += oneMoreTab;
-    txt += '<data key="height">' + node._private.style['height'].value + '</data>\n';
-
-    txt += oneMoreTab;
-    txt += '<data key="width">' + node._private.style['width'].value + '</data>\n';
+//    txt += oneMoreTab;
+//    txt += '<data key="height">' + node._private.style['height'].value + '</data>\n';
+//
+//    txt += oneMoreTab;
+//    txt += '<data key="width">' + node._private.style['width'].value[0] + '</data>\n';
 
     txt += oneMoreTab;
     txt += '<data key="color">' + node._private.style["background-color"].value[0] + " " + node._private.style["background-color"].value[1] +
@@ -34,8 +34,6 @@ var handleNode = function (node, tabNum) {
 
     txt += oneMoreTab;
     txt += '<data key="shape">' + node.css("shape").substring(0,1).toUpperCase() + node.css("shape").substring(1,node.css("shape").length) + '</data>\n';
-
-
 
 
     var children = node.children();
