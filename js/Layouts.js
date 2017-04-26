@@ -569,7 +569,7 @@ function screenNodeDetail(selectedNode){
             fontSize: '12pt',
             fontStyle: 'bold',
             fontFamily: 'Arial',
-            text: selectedNode.data('name')
+            text: ''.concat(selectedNode.data('name') + " @ (" + (selectedNode.position("x")).toFixed(1) + ", " + (selectedNode.position("y")).toFixed(1) + ") " + (selectedNode.width()).toFixed(0) + "x" + (selectedNode.height()).toFixed(0))
         });
         $('#nodeDetail').drawText({
             name: 'springForce',
@@ -578,7 +578,7 @@ function screenNodeDetail(selectedNode){
             x: 10, y: 70,
             fontSize: '11pt',
             fontFamily: 'Arial',
-            text: 'SF: '.concat((pNode.springForceX).toFixed(2), ', ', (pNode.springForceY).toFixed(2))
+            text: 'SF: '.concat((pNode.springForceX).toFixed(1), ', ', (pNode.springForceY).toFixed(1))
         });
         $('#nodeDetail').drawText({
             name: 'repulsionForce',
@@ -587,7 +587,7 @@ function screenNodeDetail(selectedNode){
             x: 10, y: 90,
             fontSize: '11pt',
             fontFamily: 'Arial',
-            text: 'RF: '.concat((pNode.repulsionForceX).toFixed(2), ', ', (pNode.repulsionForceY).toFixed(2))
+            text: 'RF: '.concat((pNode.repulsionForceX).toFixed(1), ', ', (pNode.repulsionForceY).toFixed(1))
         });
         $('#nodeDetail').drawText({
             name: 'gravityForce',
@@ -596,7 +596,7 @@ function screenNodeDetail(selectedNode){
             x: 10, y: 110,
             fontSize: '11pt',
             fontFamily: 'Arial',
-            text: 'GF: '.concat((pNode.gravitationForceX).toFixed(2), ', ', (pNode.gravitationForceY).toFixed(2))
+            text: 'GF: '.concat((pNode.gravitationForceX).toFixed(1), ', ', (pNode.gravitationForceY).toFixed(1))
         });        
         $('#nodeDetail').drawText({
             name: 'displacement',
@@ -605,7 +605,7 @@ function screenNodeDetail(selectedNode){
             x: 10, y: 130,
             fontSize: '11pt',
             fontFamily: 'Arial',
-            text: 'D: '.concat((pNode.displacementX).toFixed(2), ', ', (pNode.displacementY).toFixed(2))
+            text: 'D: '.concat((pNode.displacementX).toFixed(1), ', ', (pNode.displacementY).toFixed(1))
         });
     }
 };
