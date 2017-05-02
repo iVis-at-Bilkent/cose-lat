@@ -411,7 +411,7 @@ var screenNodes = function(keyframeNumber){
     }
 };
 //
-var screenForces = function(keyframeNumber){
+var screenForces = function(){
     var dataToScreen = animatedData[keyframeNumber+1];
     if (dataToScreen != null) {
         cy.nodes().forEach(function( ele ){
@@ -440,6 +440,10 @@ var screenForces = function(keyframeNumber){
 
                 var positionX = ele.renderedPosition('x');
                 var positionY = ele.renderedPosition('y');
+                if(ele.isParent()){
+                    positionX = ele.renderedPosition('x')-((ele.width()/2+parseFloat(ele.css('padding-left')))*cy.zoom());
+                    positionY = ele.renderedPosition('y')-((ele.height()/2+parseFloat(ele.css('padding-top')))*cy.zoom());
+                }
                 var springForceX = pNode.springForceX / normalizeRatio2;
                 var springForceY = pNode.springForceY / normalizeRatio2;
                 var repulsionForceX = pNode.repulsionForceX / normalizeRatio2;
@@ -482,7 +486,7 @@ function drawForce(canvas, posX, posY, forceX, forceY, type){
 function editForces(){
     cy.on('zoom pan position', function(){
         $('#forceCanvas').clearCanvas();   
-        if($('#forcesCheck').is(":checked")){
+        if($('#forcesCheck').is(":checked") && keyframeNumber != -1){
             screenForces(keyframeNumber);
         }
     });

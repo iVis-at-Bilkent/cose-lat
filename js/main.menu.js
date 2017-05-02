@@ -35,7 +35,7 @@ $("#delete").click(function (e) {
     ur.do("remove", selectedEles);
     
     $('#forceCanvas').clearCanvas();
-    if($('#forcesCheck').is(":checked")){
+    if($('#forcesCheck').is(":checked") && keyframeNumber != -1){
         screenForces(keyframeNumber);
     }
 });
@@ -481,8 +481,8 @@ slider.on("change", function(evt) {
     $('#forceCanvas').clearCanvas();
     keyframeNumber = evt.newValue;
     screenNodes(keyframeNumber);
-    if($('#forcesCheck').is(":checked")){
-        screenForces(keyframeNumber);
+    if($('#forcesCheck').is(":checked") && keyframeNumber != -1){
+        screenForces();
     }
     if(cy.nodes(":selected").length == 1){
         $('#nodeDetail').clearCanvas();
@@ -496,7 +496,7 @@ slider.on("change", function(evt) {
 });
 
 $('#forcesCheck').change(function () {
-    if($('#forcesCheck').is(":checked")){
+    if($('#forcesCheck').is(":checked") && keyframeNumber != -1){
         screenForces(keyframeNumber);
     }
     else{
