@@ -107,84 +107,6 @@ function refreshCytoscape(graphData) { // on dom ready
                     i = 0;
                 }
             });
-
-//            var getNodesData = function () {
-//                var nodesData = {};
-//                var nodes = cy.nodes();
-//                for (var i = 0; i < nodes.length; i++) {
-//                    var node = nodes[i];
-//                    nodesData[node.id()] = {
-//                        width: node.width(),
-//                        height: node.height(),
-//                        x: node.position("x"),
-//                        y: node.position("y")
-//                    };
-//                }
-//                return nodesData;
-//            };
-//
-//            var enableDragAndDropMode = function () {
-//                window.dragAndDropModeEnabled = true;
-//                $("#sbgn-network-container").addClass("target-cursor");
-//                cy.autolock(true);
-//                cy.autounselectify(true);
-//            };
-//
-//            var disableDragAndDropMode = function () {
-//                window.dragAndDropModeEnabled = null;
-//                window.nodeToDragAndDrop = null;
-//                $("#sbgn-network-container").removeClass("target-cursor");
-//                cy.autolock(false);
-//                cy.autounselectify(false);
-//            };
-//
-//            var lastMouseDownNodeInfo = null;
-//            this.on("mousedown", "node", function () {
-//                var self = this;
-//                lastMouseDownNodeInfo = {};
-//                lastMouseDownNodeInfo.lastMouseDownPosition = {
-//                    x: this.position("x"),
-//                    y: this.position("y")
-//                };
-//                lastMouseDownNodeInfo.node = this;
-//            });
-//
-//            this.on("mouseup", "node", function () {
-//                if (lastMouseDownNodeInfo == null) {
-//                    return;
-//                }
-//                var node = lastMouseDownNodeInfo.node;
-//                var lastMouseDownPosition = lastMouseDownNodeInfo.lastMouseDownPosition;
-//                var mouseUpPosition = {
-//                    x: node.position("x"),
-//                    y: node.position("y")
-//                };
-//                if (mouseUpPosition.x != lastMouseDownPosition.x ||
-//                    mouseUpPosition.y != lastMouseDownPosition.y) {
-//                    var positionDiff = {
-//                        x: mouseUpPosition.x - lastMouseDownPosition.x,
-//                        y: mouseUpPosition.y - lastMouseDownPosition.y
-//                    };
-//
-//                    var nodes;
-//                    if (node.selected()) {
-//                        nodes = cy.nodes(":visible").filter(":selected");
-//                    }
-//                    else {
-//                        nodes = [];
-//                        nodes.push(node);
-//                    }
-//
-//                    var param = {
-//                        positionDiff: positionDiff,
-//                        nodes: nodes, move: false
-//                    };
-//                    editorActionsManager._do(new MoveNodeCommand(param));
-//
-//                    lastMouseDownNodeInfo = null;
-//                    refreshUndoRedoButtonsStatus();
-//                }
-//            });
         }
     });
     var panProps = ({
@@ -261,7 +183,7 @@ var COSEBilkentLayout = Backbone.View.extend({
         //whether to make animation while performing the layout
         animate: 'during',
         //whether to show iterations during animation
-        showAnimation: false,
+        showAnimation: true,
         // Represents the amount of the vertical space to put between the zero degree members during the tiling operation(can also be a function)
         tilingPaddingVertical: 10,
         // Represents the amount of the horizontal space to put between the zero degree members during the tiling operation(can also be a function)
@@ -375,7 +297,10 @@ var normalizeForces = function(){
 var screenNodes = function(keyframeNumber){
     var dataToScreen = animatedData[keyframeNumber];
     if (dataToScreen != null) {
-        cy.nodes().positions(function (i, ele) {
+        cy.nodes().positions(function (ele, i) {
+          if (typeof ele === "number") {
+            ele = i;
+          }
           if (ele.scratch('coseBilkent') && ele.scratch('coseBilkent').dummy_parent_id) {
             var dummyParent = ele.scratch('coseBilkent').dummy_parent_id;
             return {
@@ -420,24 +345,13 @@ var screenNodes = function(keyframeNumber){
 var screenForces = function(){
     var dataToScreen = animatedData[keyframeNumber+1];
     if (dataToScreen != null) {
-        cy.nodes().forEach(function( ele ){
-//          if (ele.data('dummy_parent_id')) {
-//            var positionX = dataToScreen[ele.data('dummy_parent_id')].x;
-//            var positionY = dataToScreen[ele.data('dummy_parent_id')].y;
-//            var springForceX = 2;
-//            var springForceY = 4;
-//            var repulsionForceX = -2;
-//            var repulsionForceY = -6;
-//            var gravityForceX = 5;
-//            var gravityForceY = -4;
-//            drawForce(positionX, positionY, springForceX, springForceY, 1);
-//            drawForce(positionX, positionY, repulsionForceX, repulsionForceY, 2);
-//            drawForce(positionX, positionY, gravityForceX, gravityForceY, 3);
-//          }
-//          else{
+        cy.nodes().forEach(function(ele, i){
+            if (typeof ele === "number") {
+                ele = i;
+            }
             var theId = ele.data('id');
             var pNode = dataToScreen[theId];
-            var temp = this;
+            var temp = ele;
             while (pNode == null) {
               temp = temp.parent()[0];
               pNode = dataToScreen[temp.id()];
@@ -447,8 +361,8 @@ var screenForces = function(){
                 var positionX = ele.renderedPosition('x');
                 var positionY = ele.renderedPosition('y');
                 if(ele.isParent()){
-                    positionX = ele.renderedPosition('x')-((ele.width()/2+parseFloat(ele.css('padding-left')))*cy.zoom());
-                    positionY = ele.renderedPosition('y')-((ele.height()/2+parseFloat(ele.css('padding-top')))*cy.zoom());
+                    positionX = ele.renderedPosition('x')-((ele.width()/2 + parseFloat(ele.css('padding-left')))*cy.zoom());
+                    positionY = ele.renderedPosition('y')-((ele.height()/2 + parseFloat(ele.css('padding-top')))*cy.zoom());
                 }
                 var springForceX = pNode.springForceX / normalizeRatio2;
                 var springForceY = pNode.springForceY / normalizeRatio2;
