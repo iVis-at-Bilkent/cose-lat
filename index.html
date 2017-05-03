@@ -86,51 +86,6 @@
                         <li class="disabled"><a id="redo" href="#">Redo <i class="shortcut"> (CTRL + Y)</i> </a></li>
                     </ul>
                 </li>     
-<!--                <li class="dropdown">
-                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">View <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown">
-                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">Collapse / Expand
-                                <b class="right-caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a id="collapse-selected" href="#">Collapse Selected</a></li>
-                                <li><a id="expand-selected" href="#">Expand Selected</a></li>
-                                <li class="divider"></li>
-                                <li><a id="collapse-all" href="#">Collapse All</a></li>
-                                <li><a id="expand-all" href="#">Expand All</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
---> <!--              <li class="dropdown">
-                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Layout <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-     -->                   <!--
-                        <li class="dropdown">
-                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">Style
-                                <b class="right-caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a id="cose-bilkent" href="#">CoSE-Bilkent</a></li>
-                                <li><a id="cose" href="#">CoSE</a></li>
-                                <li><a id="cola" href="#">Cola</a></li>
-                                <li><a id="springy" href="#">Springy</a></li>
-                                <li><a id="arbor" href="#">Arbor</a></li>
-
-                            </ul>
-                        </li>
-                        <li class="divider"></li>
-                        -->
-     <!--                   <li><a>CoSE-Bilkent</a></li>
-                        <li class="divider"></li>
-                        <li><a accesskey = "p" id = "perform-layout" href="#">Perform Layout (Alt+P)</a></li>
-                        <li><a accesskey = "o" id = "layout-properties" href="#">Layout Properties (Alt+O)</a></li>
-                    </ul>
-                </li>
-     
-                <li><a accesskey = "p" id = "perform-layout" href="#">Layout</a></li>
-                <li><a accesskey = "o" id = "layout-properties" href="#">Layout Options</a></li>-->
                 <li class="dropdown">
                     <a href="#" data-toggle="modal" data-target="#quick-help-template">Help</a>
                 </li>
@@ -424,7 +379,7 @@
             <td>
                 <span class="add-on layout-text"> Tile </span>
             </td>
-            <td class="text-center"">
+            <td class="text-center">
                 <input id="tile" type="checkbox" class="input-small layout-text" <% if(tile){%> checked <%} %>>
             </td>
         </tr>
@@ -432,8 +387,16 @@
             <td>
                 <span class="add-on layout-text"> Animate </span>
             </td>
-            <td class="text-center"">
+            <td class="text-center">
                 <input id="animate" type="checkbox" class="input-small layout-text" <% if(animate){%> checked <%} %>>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="add-on layout-text"> Show Animation </span>
+            </td>
+            <td class="text-center">
+                <input id="showAnimation" type="checkbox" class="input-small layout-text" <% if(showAnimation){%> checked <%} %>>
             </td>
         </tr>
         <tr id="layout-buttons" class="text-center">

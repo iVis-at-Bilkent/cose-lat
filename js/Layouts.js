@@ -90,7 +90,8 @@ function refreshCytoscape(graphData) { // on dom ready
         },
         layout: {
             name: 'preset',
-            fit: true
+            fit: true,
+            padding: 20,
         },
         boxSelectionEnabled: true,
         motionBlur: true,
@@ -191,7 +192,7 @@ function refreshCytoscape(graphData) { // on dom ready
         zoomDelay: 45, // how many ms between zoom ticks
         minZoom: 0.1, // min zoom level
         maxZoom: 10, // max zoom level
-        fitPadding: 50, // padding when fitting
+        fitPadding: 20, // padding when fitting
         panSpeed: 10, // how many ms in between pan ticks
         panDistance: 10, // max pan distance per tick
         panDragAreaSize: 75, // the length of the pan drag box in which the vector for panning is calculated (bigger = finer control of pan speed and direction)
@@ -229,9 +230,11 @@ var COSEBilkentLayout = Backbone.View.extend({
     defaultLayoutProperties: {
         name: 'cose-bilkent',
         ready: function () {
+            document.getElementById("perform-layout").setAttribute("class", "btn btn-danger btn-md");
         },
         // Called on `layoutstop`
         stop: function () {
+            document.getElementById("perform-layout").setAttribute("class", "btn btn-info btn-md");
         },
         // number of ticks per frame; higher is faster but more jerky
         refresh: 30, 
@@ -257,6 +260,8 @@ var COSEBilkentLayout = Backbone.View.extend({
         tile: true,
         //whether to make animation while performing the layout
         animate: 'during',
+        //whether to show iterations during animation
+        showAnimation: false,
         // Represents the amount of the vertical space to put between the zero degree members during the tiling operation(can also be a function)
         tilingPaddingVertical: 10,
         // Represents the amount of the horizontal space to put between the zero degree members during the tiling operation(can also be a function)
@@ -317,7 +322,8 @@ var COSEBilkentLayout = Backbone.View.extend({
             }
             else {
                 self.currentLayoutProperties.animate = false;
-            }  
+            }
+            self.currentLayoutProperties.showAnimation = document.getElementById("showAnimation").checked;
             iterationRate = self.currentLayoutProperties.refresh;
             $(self.el).dialog('close');
         });
