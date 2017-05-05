@@ -159,7 +159,7 @@ var COSEBilkentLayout = Backbone.View.extend({
             document.getElementById("perform-layout").setAttribute("class", "btn btn-info btn-md");
         },
         // number of ticks per frame; higher is faster but more jerky
-        refresh: 30, 
+        refresh: 1, 
         // Whether to fit the network view after when done
         fit: true,
         // Padding on fit
@@ -269,6 +269,7 @@ var animatedData = [];
 var numberOfKeyframes;
 window.addEventListener('send', function (e) { 
     animatedData.push(e.detail);
+//    console.log(animatedData[7][0]);
 }, false);
 
 var normalizeRatio;
@@ -278,9 +279,9 @@ var normalizeForces = function(){
        var maxForce = -10000;
        var minForce = 10000;
        for(i = 0; i<animatedData.length; i++){
-           for(j = 0; j<Object.values(animatedData[i]).length; j++){
-               var tempMax = Math.max(Object.values(animatedData[i])[j].springForceX, Object.values(animatedData[i])[j].springForceY, Object.values(animatedData[i])[j].repulsionForceX, Object.values(animatedData[i])[j].repulsionForceY, Object.values(animatedData[i])[j].gravitationForceX, Object.values(animatedData[i])[j].gravitationForceY);                        
-               var tempMin = Math.min(Object.values(animatedData[i])[j].springForceX, Object.values(animatedData[i])[j].springForceY, Object.values(animatedData[i])[j].repulsionForceX, Object.values(animatedData[i])[j].repulsionForceY, Object.values(animatedData[i])[j].gravitationForceX, Object.values(animatedData[i])[j].gravitationForceY);                        
+           for(j = 0; j<Object.values(animatedData[i][0]).length; j++){
+               var tempMax = Math.max(Object.values(animatedData[i][0])[j].springForceX, Object.values(animatedData[i][0])[j].springForceY, Object.values(animatedData[i][0])[j].repulsionForceX, Object.values(animatedData[i][0])[j].repulsionForceY, Object.values(animatedData[i][0])[j].gravitationForceX, Object.values(animatedData[i][0])[j].gravitationForceY);                        
+               var tempMin = Math.min(Object.values(animatedData[i][0])[j].springForceX, Object.values(animatedData[i][0])[j].springForceY, Object.values(animatedData[i][0])[j].repulsionForceX, Object.values(animatedData[i][0])[j].repulsionForceY, Object.values(animatedData[i][0])[j].gravitationForceX, Object.values(animatedData[i][0])[j].gravitationForceY);                        
             if(tempMax > maxForce){
                 maxForce = tempMax;
             }
@@ -295,7 +296,9 @@ var normalizeForces = function(){
 };
 
 var screenNodes = function(keyframeNumber){
-    var dataToScreen = animatedData[keyframeNumber];
+
+    var dataToScreen = animatedData[keyframeNumber][0];
+
     if (dataToScreen != null) {
         cy.nodes().positions(function (ele, i) {
           if (typeof ele === "number") {
@@ -342,8 +345,10 @@ var screenNodes = function(keyframeNumber){
     }
 };
 //
-var screenForces = function(){
-    var dataToScreen = animatedData[keyframeNumber+1];
+var screenForces = function(keyframeNumber){
+
+    var dataToScreen = animatedData[keyframeNumber+1][0];
+
     if (dataToScreen != null) {
         cy.nodes().forEach(function(ele, i){
             if (typeof ele === "number") {
@@ -385,7 +390,7 @@ var screenForces = function(){
         });
   }
 };
-//
+
 function drawForce(canvas, posX, posY, forceX, forceY, type){   
     var zoom = cy.zoom();
     if(canvas.selector == '#nodeDetail'){
@@ -406,12 +411,12 @@ function drawForce(canvas, posX, posY, forceX, forceY, type){
 function editForces(){
     cy.on('zoom pan position', function(){
         $('#forceCanvas').clearCanvas();   
-        if($('#forcesCheck').is(":checked") && keyframeNumber != -1){
+        if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null){
             screenForces(keyframeNumber);
         }
     });
     cy.on('select','node', function(event){
-        if(cy.nodes(":selected").length == 1 && slider.getAttribute("active")){
+        if(cy.nodes(":selected").length == 1 && slider.getAttribute("active") && keyframeNumber < animatedData.length-1){
             showNodeDetail();
             var selectedNode = event.cyTarget;
             screenNodeDetail(selectedNode);
@@ -428,10 +433,37 @@ function editForces(){
             }
         }
     });
-    cy.on('unselect', 'node', function(){
-        if(cy.nodes(":selected").length == 1 && slider.getAttribute("active")){
+    cy.on('select','edge', function(event){  
+        if(cy.elements(":selected").length == 1 && slider.getAttribute("active") && keyframeNumber < animatedData.length-1){  
+            $('#nodeDetail').clearCanvas();
             showNodeDetail();
-            screenNodeDetail(cy.nodes(":selected"));
+            var selectedEdge = cy.edges(":selected");
+            screenEdgeDetail(selectedEdge); 
+        }
+        else{
+            hideNodeDetail();
+        }
+    });
+    
+    cy.on('unselect','edge', function(event){  
+        if(cy.elements(":selected").length == 1  && slider.getAttribute("active")){
+            showNodeDetail();
+            var selectedEdge = cy.edges(":selected");
+            screenEdgeDetail(selectedEdge); 
+        }
+    });
+        
+    cy.on('unselect', function(){
+        if(cy.elements(":selected").length == 1 && slider.getAttribute("active")){
+            showNodeDetail();
+            if(cy.elements(":selected").isNode()){
+                var selectedNode = cy.nodes(":selected");
+                screenNodeDetail(selectedNode); 
+            }
+            else{
+                var selectedEdge = cy.edges(":selected");
+                screenEdgeDetail(selectedEdge); 
+            }
         }
         else{
             hideNodeDetail();
@@ -463,7 +495,7 @@ function loadCanvas(){
     div.appendChild(canvas);
 };
 function screenNodeDetail(selectedNode){
-    var dataToScreen = animatedData[keyframeNumber+1];
+    var dataToScreen = animatedData[keyframeNumber+1][0];
     if (dataToScreen != null) {
         var pNode;
         if (dataToScreen != null) {
@@ -499,8 +531,8 @@ function screenNodeDetail(selectedNode){
             name: 'springForce',
             fillStyle: '#FF0000',
             fromCenter: false,
-            x: 10, y: 70,
-            fontSize: '11pt',
+            x: 10, y: 55,
+            fontSize: '12pt',
             fontFamily: 'Arial',
             text: 'SF: '.concat((pNode.springForceX).toFixed(1), ', ', (pNode.springForceY).toFixed(1))
         });
@@ -508,8 +540,8 @@ function screenNodeDetail(selectedNode){
             name: 'repulsionForce',
             fillStyle: '#0000FF',
             fromCenter: false,
-            x: 10, y: 90,
-            fontSize: '11pt',
+            x: 10, y: 80,
+            fontSize: '12pt',
             fontFamily: 'Arial',
             text: 'RF: '.concat((pNode.repulsionForceX).toFixed(1), ', ', (pNode.repulsionForceY).toFixed(1))
         });
@@ -517,8 +549,8 @@ function screenNodeDetail(selectedNode){
             name: 'gravityForce',
             fillStyle: '#8DB600',
             fromCenter: false,
-            x: 10, y: 110,
-            fontSize: '11pt',
+            x: 10, y: 105,
+            fontSize: '12pt',
             fontFamily: 'Arial',
             text: 'GF: '.concat((pNode.gravitationForceX).toFixed(1), ', ', (pNode.gravitationForceY).toFixed(1))
         });        
@@ -527,12 +559,64 @@ function screenNodeDetail(selectedNode){
             fillStyle: '#967117',
             fromCenter: false,
             x: 10, y: 130,
-            fontSize: '11pt',
+            fontSize: '12pt',
             fontFamily: 'Arial',
             text: 'D: '.concat((pNode.displacementX).toFixed(1), ', ', (pNode.displacementY).toFixed(1))
         });
     }
 };
+
+function screenEdgeDetail(selectedEdge){
+    var dataToScreen = animatedData[keyframeNumber+1][1];
+    if (dataToScreen != null) {
+        var dEdge;
+        var theId = selectedEdge.data('id');
+        dEdge = dataToScreen[theId];
+        
+        var canvas = $('#nodeDetail');
+        
+        $('#nodeDetail').drawText({
+            name: 'edgeName',
+            fillStyle: '#36c',
+            x: 150, y: 10,
+            fontSize: '12pt',
+            fontStyle: 'bold',
+            fontFamily: 'Arial',
+            text: selectedEdge.id()
+        });
+        
+        $('#nodeDetail').drawText({
+            name: 'sourceNode',
+            fillStyle: '#FF0000',
+            fromCenter: false,
+            x: 10, y: 50,
+            fontSize: '12pt',
+            fontStyle: 'bold',
+            fontFamily: 'Arial',
+            text: 'Source Node : ' + selectedEdge.source().data('name')
+        });
+        $('#nodeDetail').drawText({
+            name: 'targetNode',
+            fillStyle: '#FF0000',
+            fromCenter: false,
+            x: 10, y: 80,
+            fontSize: '12pt',
+            fontStyle: 'bold',
+            fontFamily: 'Arial',
+            text: 'Target Node  : ' + selectedEdge.target().data('name')
+        });
+        $('#nodeDetail').drawText({
+            name: 'length',
+            fillStyle: '#FF0000',
+            fromCenter: false,
+            x: 10, y: 110,
+            fontSize: '12pt',
+            fontStyle: 'bold',
+            fontFamily: 'Arial',
+            text: 'Edge Length : ' + dEdge.length.toFixed(1)
+        });
+    }
+}
 
 function showNodeDetail(){
     document.getElementById('nodeDetail').style.visibility = "visible";

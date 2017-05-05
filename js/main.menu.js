@@ -35,7 +35,7 @@ $("#delete").click(function (e) {
     ur.do("remove", selectedEles);
     
     $('#forceCanvas').clearCanvas();
-    if($('#forcesCheck').is(":checked") && keyframeNumber != -1){
+    if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null){
         screenForces(keyframeNumber);
     }
 });
@@ -481,14 +481,21 @@ slider.on("change", function(evt) {
     $('#forceCanvas').clearCanvas();
     keyframeNumber = evt.newValue;
     screenNodes(keyframeNumber);
-    if($('#forcesCheck').is(":checked") && keyframeNumber != -1){
-        screenForces();
+
+    if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null){
+        screenForces(keyframeNumber);
     }
-    if(cy.nodes(":selected").length == 1){
+    if(cy.elements(":selected").length == 1 && keyframeNumber < animatedData.length-1){
         $('#nodeDetail').clearCanvas();
         showNodeDetail();
-        var selectedNode = cy.nodes(":selected");
-        screenNodeDetail(selectedNode);  
+        if(cy.elements(":selected").isNode()){
+            var selectedNode = cy.nodes(":selected");
+            screenNodeDetail(selectedNode); 
+        }
+        else{
+            var selectedEdge = cy.edges(":selected");
+            screenEdgeDetail(selectedEdge); 
+        }
     }
     else{
         hideNodeDetail();
@@ -496,7 +503,7 @@ slider.on("change", function(evt) {
 });
 
 $('#forcesCheck').change(function () {
-    if($('#forcesCheck').is(":checked") && keyframeNumber != -1){
+    if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null){
         screenForces(keyframeNumber);
     }
     else{
