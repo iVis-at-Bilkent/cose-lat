@@ -18,15 +18,20 @@ var refreshUndoRedoButtonsStatus = function(){
 
 ///////////////////// EDIT ////////////////////////////
 
-$("#undo").click(function (e) {
-    ur.undo();
-});
+var undo = function(){
+    ur.undo(); 
+};
+$("#undo").click(undo);
+shortcut.add("Ctrl+Z", undo);
 
-$("#redo").click(function (e) {
-    ur.redo();
-});
+var redo = function(){
+    ur.redo(); 
+};
 
-$("#delete").click(function (e) {
+$("#redo").click(redo);
+shortcut.add("Ctrl+Y", redo);
+
+var deleteSelected = function () {
     var selectedEles = cy.$(":selected");
 
     if(selectedEles.length == 0){
@@ -38,19 +43,25 @@ $("#delete").click(function (e) {
     if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null){
         screenForces(keyframeNumber);
     }
-});
+    hideNodeDetail();
+}; 
 
-$("#addEdge").click(function (e) {
+$("#delete").click(deleteSelected);
+shortcut.add("Delete", deleteSelected);
 
+var addEdge = function(){
     if(cy.$("node:selected").length == 2)
-        ur.do("add", {
-            group: "edges",
-            data: {
-                source: cy.$("node:selected")[0].data('id'),
-                target: cy.$("node:selected")[1].data('id')
-            }
-        });
-});
+    ur.do("add", {
+        group: "edges",
+        data: {
+            source: cy.$("node:selected")[0].data('id'),
+            target: cy.$("node:selected")[1].data('id')
+        }
+    }); 
+};
+
+$("#addEdge").click(addEdge);
+shortcut.add("e", addEdge);
 
 ///////////////////// VIEW ////////////////////////////
 
@@ -117,19 +128,18 @@ $("#expand-all").click(function (e) {
 
 ///////////////////// LOAD & SAVE //////////////////////////////
 
-
-$("#save-file").click(function (e) {
-
+var saveFile = function(){
     var sbgnmlText = jsonToGraphml.createGraphml(atts);
 
     var blob = new Blob([sbgnmlText], {
         type: "text/plain;charset=utf-8;",
     });
     var filename = "" + new Date().getTime() + ".graphml";;
-    saveAs(blob, filename);
+    saveAs(blob, filename);   
+};
 
-});
-
+$("#save-file").click(saveFile);
+shortcut.add("Ctrl+S", saveFile);
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -287,8 +297,7 @@ $("#layout-properties").click(function (e) {
 
 });
 
-$("#perform-layout").click(function (e) {
-
+var performLayout = function(){
     cy.nodes().removeData("ports");
     cy.edges().removeData("portsource");
     cy.edges().removeData("porttarget");
@@ -302,8 +311,11 @@ $("#perform-layout").click(function (e) {
     slider.setAttribute('max', -1);
     slider.setValue(-1, false, true);
     slider.setAttribute("active", false);    
-    coseBilkentLayoutProp.applyLayout();
-});
+    coseBilkentLayoutProp.applyLayout(); 
+};
+$("#perform-layout").click(performLayout);
+shortcut.add("p", performLayout);
+
 var atts;
 
 $("body").on("change", "#file-input", function (e) {

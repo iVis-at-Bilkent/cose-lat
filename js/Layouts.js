@@ -590,8 +590,7 @@ function screenEdgeDetail(selectedEdge){
             fillStyle: '#FF0000',
             fromCenter: false,
             x: 6, y: 50,
-            fontSize: '11pt',
-            fontStyle: 'bold',
+            fontSize: '12pt',
             fontFamily: 'Arial',
             text: 'Source Node : ' + selectedEdge.source().data('name')
         });
@@ -600,8 +599,7 @@ function screenEdgeDetail(selectedEdge){
             fillStyle: '#FF0000',
             fromCenter: false,
             x: 6, y: 80,
-            fontSize: '11pt',
-            fontStyle: 'bold',
+            fontSize: '12pt',
             fontFamily: 'Arial',
             text: 'Target Node  : ' + selectedEdge.target().data('name')
         });
@@ -610,10 +608,9 @@ function screenEdgeDetail(selectedEdge){
             fillStyle: '#FF0000',
             fromCenter: false,
             x: 6, y: 110,
-            fontSize: '11pt',
-            fontStyle: 'bold',
+            fontSize: '12pt',
             fontFamily: 'Arial',
-            text: 'Edge Length : '.concat(dEdge.length.toFixed(1), ' (x:', dEdge.xLength.toFixed(1), ', y:', dEdge.yLength.toFixed(1), ')')
+            text: 'Length : '.concat(dEdge.length.toFixed(1), ' (x: ', dEdge.xLength.toFixed(1), ', y: ', dEdge.yLength.toFixed(1), ')')
         });
     }
 }
