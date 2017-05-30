@@ -411,7 +411,7 @@ function drawForce(canvas, posX, posY, forceX, forceY, type){
 function editForces(){
     cy.on('zoom pan position', function(){
         $('#forceCanvas').clearCanvas();   
-        if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null){
+        if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null && keyframeNumber < animatedData.length-1){
             screenForces(keyframeNumber);
         }
     });

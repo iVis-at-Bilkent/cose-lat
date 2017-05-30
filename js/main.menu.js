@@ -40,7 +40,7 @@ var deleteSelected = function () {
     ur.do("remove", selectedEles);
     
     $('#forceCanvas').clearCanvas();
-    if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null){
+    if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null && keyframeNumber < animatedData.length-1){
         screenForces(keyframeNumber);
     }
     hideNodeDetail();
@@ -305,7 +305,7 @@ var performLayout = function(){
     cy.nodes().data("ports", []);
     cy.edges().data("portsource", []);
     cy.edges().data("porttarget", []);
-    
+
     cy.elements().unselect();
     slider.setAttribute('min', -1);
     slider.setAttribute('max', -1);
@@ -492,9 +492,10 @@ slider.on("change", function(evt) {
     slider.setAttribute("active", true);
     $('#forceCanvas').clearCanvas();
     keyframeNumber = evt.newValue;
-    screenNodes(keyframeNumber);
-
-    if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null){
+    if(slider.getValue() != -1){
+        screenNodes(keyframeNumber);
+    }
+    if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null && keyframeNumber < animatedData.length-1){
         screenForces(keyframeNumber);
     }
     if(cy.elements(":selected").length == 1 && keyframeNumber < animatedData.length-1){
@@ -515,7 +516,7 @@ slider.on("change", function(evt) {
 });
 
 $('#forcesCheck').change(function () {
-    if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null){
+    if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null && keyframeNumber < animatedData.length-1){
         screenForces(keyframeNumber);
     }
     else{
