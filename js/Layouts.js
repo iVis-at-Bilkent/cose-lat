@@ -375,15 +375,15 @@ var screenForces = function(keyframeNumber){
                 var repulsionForceY = pNode.repulsionForceY / normalizeRatio2;
                 var gravitationForceX = pNode.gravitationForceX / normalizeRatio2;
                 var gravitationForceY = pNode.gravitationForceY / normalizeRatio2;
-
+                
                 var canvas = $('#forceCanvas');
-                if(springForceX != 0 && springForceY != 0){
+                if(springForceX != 0 || springForceY != 0){
                     drawForce(canvas, positionX, positionY, springForceX, springForceY, 1);
                 }
-                if(repulsionForceX != 0 && repulsionForceY != 0){
+                if(repulsionForceX != 0 || repulsionForceY != 0){
                     drawForce(canvas, positionX, positionY, repulsionForceX, repulsionForceY, 2);
                 }
-                if(gravitationForceX != 0 && gravitationForceY != 0){
+                if(gravitationForceX != 0 || gravitationForceY != 0){
                     drawForce(canvas, positionX, positionY, gravitationForceX, gravitationForceY, 3);
                 }
 //          }
