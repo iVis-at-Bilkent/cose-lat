@@ -541,6 +541,11 @@ $('#fitCheck').change(function () {
     }
 });
 
+$('#normalizeCheck').change(function () {
+    $('#forceCanvas').clearCanvas();
+    screenForces(keyframeNumber);
+});
+
 var speedSlider = new Slider('#speedSlider', {
     orientation: "horizontal",
     step: 250,

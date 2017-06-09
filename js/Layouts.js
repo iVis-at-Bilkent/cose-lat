@@ -152,11 +152,11 @@ var COSEBilkentLayout = Backbone.View.extend({
     defaultLayoutProperties: {
         name: 'cose-bilkent',
         ready: function () {
-            document.getElementById("perform-layout").setAttribute("class", "btn btn-danger btn-md");
+            document.getElementById("perform-layout").disabled = true;
         },
         // Called on `layoutstop`
         stop: function () {
-            document.getElementById("perform-layout").setAttribute("class", "btn btn-info btn-md");
+            document.getElementById("perform-layout").disabled = false;
         },
         // number of ticks per frame; higher is faster but more jerky
         refresh: 1, 
@@ -369,12 +369,22 @@ var screenForces = function(keyframeNumber){
                     positionX = ele.renderedPosition('x')-((ele.width()/2 + parseFloat(ele.css('padding-left')))*cy.zoom());
                     positionY = ele.renderedPosition('y')-((ele.height()/2 + parseFloat(ele.css('padding-top')))*cy.zoom());
                 }
-                var springForceX = pNode.springForceX / normalizeRatio2;
-                var springForceY = pNode.springForceY / normalizeRatio2;
-                var repulsionForceX = pNode.repulsionForceX / normalizeRatio2;
-                var repulsionForceY = pNode.repulsionForceY / normalizeRatio2;
-                var gravitationForceX = pNode.gravitationForceX / normalizeRatio2;
-                var gravitationForceY = pNode.gravitationForceY / normalizeRatio2;
+                if($('#normalizeCheck').is(":checked")){
+                    var springForceX = pNode.springForceX / normalizeRatio2;
+                    var springForceY = pNode.springForceY / normalizeRatio2;
+                    var repulsionForceX = pNode.repulsionForceX / normalizeRatio2;
+                    var repulsionForceY = pNode.repulsionForceY / normalizeRatio2;
+                    var gravitationForceX = pNode.gravitationForceX / normalizeRatio2;
+                    var gravitationForceY = pNode.gravitationForceY / normalizeRatio2;
+                }
+                else{
+                    var springForceX = pNode.springForceX;
+                    var springForceY = pNode.springForceY;
+                    var repulsionForceX = pNode.repulsionForceX;
+                    var repulsionForceY = pNode.repulsionForceY;
+                    var gravitationForceX = pNode.gravitationForceX;
+                    var gravitationForceY = pNode.gravitationForceY;
+                }
                 
                 var canvas = $('#forceCanvas');
                 if(springForceX != 0 || springForceY != 0){
@@ -396,9 +406,19 @@ function drawForce(canvas, posX, posY, forceX, forceY, type){
     if(canvas.selector == '#nodeDetail'){
         zoom = 1;
     }
+    var shortened = false;
+    var hipo = Math.sqrt(Math.pow(forceX,2) + Math.pow(forceY,2));
+    if(!$('#normalizeCheck').is(":checked") && hipo > 250){
+        var sin = forceY/hipo;
+        var cos = forceX/hipo;
+        forceX = 250 * cos;
+        forceY = 250 * sin;
+        shortened = true;
+    }
     canvas.drawLine({
       strokeStyle: (type==1)?'#FF0000':(type==2)?'#0000FF':'#8DB600',
       strokeWidth: 3*zoom,
+      strokeDash: (shortened)?[20*zoom, 5*zoom]:[0],
       rounded: true,
       endArrow: true,
       arrowRadius: 5*zoom,
