@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/iVis-at-Bilkent/cose-lat",
   "dependencies": {
-    "cytoscape-panzoom": "^2.4.1",    
+    "cytoscape-panzoom": "^2.4.1",
     "cytoscape-undo-redo": "^1.2.6",
     "cytoscape-navigator": "^1.0.0",
     "cytoscape-cose-bilkent": "hasanbalci/cytoscape.js-cose-bilkent",

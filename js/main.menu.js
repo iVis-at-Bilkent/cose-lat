@@ -307,6 +307,7 @@ var performLayout = function(){
     cy.edges().data("porttarget", []);
 
     cy.elements().unselect();
+    cy.elements().css("display", "element");
     slider.setAttribute('min', -1);
     slider.setAttribute('max', -1);
     slider.setValue(-1, false, true);

@@ -275,30 +275,32 @@ window.addEventListener('send', function (e) {
 var normalizeRatio;
 var normalizeRatio2;
 var normalizeForces = function(){
-    cy.on('layoutstop', function(){
-       var maxForce = -10000;
-       var minForce = 10000;
-       for(i = 0; i<animatedData.length; i++){
-           for(j = 0; j<Object.values(animatedData[i][0]).length; j++){
-               var tempMax = Math.max(Object.values(animatedData[i][0])[j].springForceX, Object.values(animatedData[i][0])[j].springForceY, Object.values(animatedData[i][0])[j].repulsionForceX, Object.values(animatedData[i][0])[j].repulsionForceY, Object.values(animatedData[i][0])[j].gravitationForceX, Object.values(animatedData[i][0])[j].gravitationForceY);                        
-               var tempMin = Math.min(Object.values(animatedData[i][0])[j].springForceX, Object.values(animatedData[i][0])[j].springForceY, Object.values(animatedData[i][0])[j].repulsionForceX, Object.values(animatedData[i][0])[j].repulsionForceY, Object.values(animatedData[i][0])[j].gravitationForceX, Object.values(animatedData[i][0])[j].gravitationForceY);                        
-            if(tempMax > maxForce){
-                maxForce = tempMax;
-            }
-            if(tempMin < minForce){
-                minForce = tempMin;
-            }
-           }
-       }
-       normalizeRatio = Math.max(Math.abs(maxForce), Math.abs(minForce)) / 60;
-       normalizeRatio2 = Math.max(Math.abs(maxForce), Math.abs(minForce)) / 100;
-    });
+  cy.on('layoutstop', function(){
+    var maxForce = -10000;
+    var minForce = 10000;
+    for(i = 0; i<animatedData.length; i++){
+      for(j = 0; j<Object.values(animatedData[i][0]).length; j++){
+        if(Object.values(animatedData[i][0])[j] != null){
+          var tempMax = Math.max(Object.values(animatedData[i][0])[j].springForceX, Object.values(animatedData[i][0])[j].springForceY, Object.values(animatedData[i][0])[j].repulsionForceX, Object.values(animatedData[i][0])[j].repulsionForceY, Object.values(animatedData[i][0])[j].gravitationForceX, Object.values(animatedData[i][0])[j].gravitationForceY);                        
+          var tempMin = Math.min(Object.values(animatedData[i][0])[j].springForceX, Object.values(animatedData[i][0])[j].springForceY, Object.values(animatedData[i][0])[j].repulsionForceX, Object.values(animatedData[i][0])[j].repulsionForceY, Object.values(animatedData[i][0])[j].gravitationForceX, Object.values(animatedData[i][0])[j].gravitationForceY);                        
+          if(tempMax > maxForce){
+              maxForce = tempMax;
+          }
+          if(tempMin < minForce){
+              minForce = tempMin;
+          }
+        }
+      }
+    }
+     normalizeRatio = Math.max(Math.abs(maxForce), Math.abs(minForce)) / 60;
+     normalizeRatio2 = Math.max(Math.abs(maxForce), Math.abs(minForce)) / 100;
+  });
 };
 
 var screenNodes = function(keyframeNumber){
 
     var dataToScreen = animatedData[keyframeNumber][0];
-
+    cy.startBatch();
     if (dataToScreen != null) {
         cy.nodes().positions(function (ele, i) {
           if (typeof ele === "number") {
@@ -315,14 +317,30 @@ var screenNodes = function(keyframeNumber){
           var pNode = dataToScreen[theId];
           var temp = this;
           while (pNode == null) {
-            temp = temp.parent()[0];
-            pNode = dataToScreen[temp.id()];
+            pNode = dataToScreen[temp.parent().id()];
             dataToScreen[theId] = pNode;
+            temp = temp.parent()[0];
+            if (temp == undefined) {
+              break;
+            }            
           }
-          return {
-            x: pNode.x,
-            y: pNode.y    
-          };
+          if (pNode != null) {
+//            if(!ele.visible()){
+              ele.css("display", "element");
+//            }
+            return {
+              x: pNode.x,
+              y: pNode.y
+            };
+          } else {
+//            if(ele.visible()){
+              ele.css("display", "none");
+//            }
+            return {
+              x: ele.position("x"),
+              y: ele.position("y")
+            };
+          }
         });
       
         if($('#fitCheck').is(":checked") && cy.nodes(":selected").length > 0){
@@ -343,6 +361,7 @@ var screenNodes = function(keyframeNumber){
 //            cy.trigger({type: 'layoutready', layout: 'cose-bilkent'});
 //        }
     }
+    cy.endBatch();
 };
 //
 var screenForces = function(keyframeNumber){
@@ -358,45 +377,48 @@ var screenForces = function(keyframeNumber){
             var pNode = dataToScreen[theId];
             var temp = ele;
             while (pNode == null) {
-              temp = temp.parent()[0];
-              pNode = dataToScreen[temp.id()];
+              pNode = dataToScreen[temp.parent().id()];
               dataToScreen[theId] = pNode;
+              temp = temp.parent()[0];
+              if (temp == undefined) {
+                break;
+              } 
             }
+            if(pNode != null && ele.visible()){
+              var positionX = ele.renderedPosition('x');
+              var positionY = ele.renderedPosition('y');
+              if(ele.isParent()){
+                  positionX = ele.renderedPosition('x')-((ele.width()/2 + parseFloat(ele.css('padding-left')))*cy.zoom());
+                  positionY = ele.renderedPosition('y')-((ele.height()/2 + parseFloat(ele.css('padding-top')))*cy.zoom());
+              }
+              if($('#normalizeCheck').is(":checked")){
+                  var springForceX = pNode.springForceX / normalizeRatio2;
+                  var springForceY = pNode.springForceY / normalizeRatio2;
+                  var repulsionForceX = pNode.repulsionForceX / normalizeRatio2;
+                  var repulsionForceY = pNode.repulsionForceY / normalizeRatio2;
+                  var gravitationForceX = pNode.gravitationForceX / normalizeRatio2;
+                  var gravitationForceY = pNode.gravitationForceY / normalizeRatio2;
+              }
+              else{
+                  var springForceX = pNode.springForceX;
+                  var springForceY = pNode.springForceY;
+                  var repulsionForceX = pNode.repulsionForceX;
+                  var repulsionForceY = pNode.repulsionForceY;
+                  var gravitationForceX = pNode.gravitationForceX;
+                  var gravitationForceY = pNode.gravitationForceY;
+              }
 
-                var positionX = ele.renderedPosition('x');
-                var positionY = ele.renderedPosition('y');
-                if(ele.isParent()){
-                    positionX = ele.renderedPosition('x')-((ele.width()/2 + parseFloat(ele.css('padding-left')))*cy.zoom());
-                    positionY = ele.renderedPosition('y')-((ele.height()/2 + parseFloat(ele.css('padding-top')))*cy.zoom());
-                }
-                if($('#normalizeCheck').is(":checked")){
-                    var springForceX = pNode.springForceX / normalizeRatio2;
-                    var springForceY = pNode.springForceY / normalizeRatio2;
-                    var repulsionForceX = pNode.repulsionForceX / normalizeRatio2;
-                    var repulsionForceY = pNode.repulsionForceY / normalizeRatio2;
-                    var gravitationForceX = pNode.gravitationForceX / normalizeRatio2;
-                    var gravitationForceY = pNode.gravitationForceY / normalizeRatio2;
-                }
-                else{
-                    var springForceX = pNode.springForceX;
-                    var springForceY = pNode.springForceY;
-                    var repulsionForceX = pNode.repulsionForceX;
-                    var repulsionForceY = pNode.repulsionForceY;
-                    var gravitationForceX = pNode.gravitationForceX;
-                    var gravitationForceY = pNode.gravitationForceY;
-                }
-                
-                var canvas = $('#forceCanvas');
-                if(springForceX != 0 || springForceY != 0){
-                    drawForce(canvas, positionX, positionY, springForceX, springForceY, 1);
-                }
-                if(repulsionForceX != 0 || repulsionForceY != 0){
-                    drawForce(canvas, positionX, positionY, repulsionForceX, repulsionForceY, 2);
-                }
-                if(gravitationForceX != 0 || gravitationForceY != 0){
-                    drawForce(canvas, positionX, positionY, gravitationForceX, gravitationForceY, 3);
-                }
-//          }
+              var canvas = $('#forceCanvas');
+              if(springForceX != 0 || springForceY != 0){
+                  drawForce(canvas, positionX, positionY, springForceX, springForceY, 1);
+              }
+              if(repulsionForceX != 0 || repulsionForceY != 0){
+                  drawForce(canvas, positionX, positionY, repulsionForceX, repulsionForceY, 2);
+              }
+              if(gravitationForceX != 0 || gravitationForceY != 0){
+                  drawForce(canvas, positionX, positionY, gravitationForceX, gravitationForceY, 3);
+              }
+            }
         });
   }
 };
@@ -508,8 +530,8 @@ function loadCanvas(){
     var canvas = document.createElement('canvas');
     div = document.getElementById("cy"); 
     canvas.id = "forceCanvas";
-    canvas.width = 1200;
-    canvas.height = 780;
+    canvas.width = div.scrollWidth;
+    canvas.height = div.scrollHeight;
     canvas.style.zIndex = 9;
     canvas.style.position = "absolute";
     div.appendChild(canvas);
@@ -521,68 +543,76 @@ function screenNodeDetail(selectedNode){
         if (dataToScreen != null) {
             var theId = selectedNode.data('id');
             pNode = dataToScreen[theId];
-            var temp = this;
+            var temp = selectedNode;
             while (pNode == null) {
-                temp = temp.parent()[0];
-                pNode = dataToScreen[temp.id()];
-                dataToScreen[theId] = pNode;
+              pNode = dataToScreen[temp.parent().id()];
+              dataToScreen[theId] = pNode;
+              temp = temp.parent()[0];
+              if (temp == undefined) {
+                break;
+              }
             }
         }
-        var canvas = $('#nodeDetail');
-        if(pNode.springForceX != 0 && pNode.springForceY != 0){
-            drawForce(canvas, 225, 80, pNode.springForceX/normalizeRatio, pNode.springForceY/normalizeRatio, 1);
+        if(pNode != null){
+          var canvas = $('#nodeDetail');
+          if(pNode.springForceX != 0 && pNode.springForceY != 0){
+              drawForce(canvas, 225, 80, pNode.springForceX/normalizeRatio, pNode.springForceY/normalizeRatio, 1);
+          }
+          if(pNode.repulsionForceX != 0 && pNode.repulsionForceY != 0){
+              drawForce(canvas, 225, 80, pNode.repulsionForceX/normalizeRatio, pNode.repulsionForceY/normalizeRatio, 2);
+          }
+          if(pNode.gravitationForceX != 0 && pNode.gravitationForceY != 0){
+              drawForce(canvas, 225, 80, pNode.gravitationForceX/normalizeRatio, pNode.gravitationForceY/normalizeRatio, 3);
+          }
+          $('#nodeDetail').drawText({
+              name: 'nodeName',
+              fillStyle: '#36c',
+              x: 150, y: 10,
+              fontSize: '12pt',
+              fontStyle: 'bold',
+              fontFamily: 'Arial',
+              text: ''.concat(selectedNode.data('name') + " @ (" + (selectedNode.position("x")).toFixed(1) + ", " + (selectedNode.position("y")).toFixed(1) + ") " + (selectedNode.width()).toFixed(0) + "x" + (selectedNode.height()).toFixed(0))
+          });
+          $('#nodeDetail').drawText({
+              name: 'springForce',
+              fillStyle: '#FF0000',
+              fromCenter: false,
+              x: 10, y: 55,
+              fontSize: '12pt',
+              fontFamily: 'Arial',
+              text: 'SF: '.concat((pNode.springForceX).toFixed(1), ', ', (pNode.springForceY).toFixed(1))
+          });
+          $('#nodeDetail').drawText({
+              name: 'repulsionForce',
+              fillStyle: '#0000FF',
+              fromCenter: false,
+              x: 10, y: 80,
+              fontSize: '12pt',
+              fontFamily: 'Arial',
+              text: 'RF: '.concat((pNode.repulsionForceX).toFixed(1), ', ', (pNode.repulsionForceY).toFixed(1))
+          });
+          $('#nodeDetail').drawText({
+              name: 'gravityForce',
+              fillStyle: '#8DB600',
+              fromCenter: false,
+              x: 10, y: 105,
+              fontSize: '12pt',
+              fontFamily: 'Arial',
+              text: 'GF: '.concat((pNode.gravitationForceX).toFixed(1), ', ', (pNode.gravitationForceY).toFixed(1))
+          });        
+          $('#nodeDetail').drawText({
+              name: 'displacement',
+              fillStyle: '#967117',
+              fromCenter: false,
+              x: 10, y: 130,
+              fontSize: '12pt',
+              fontFamily: 'Arial',
+              text: 'D: '.concat((pNode.displacementX).toFixed(1), ', ', (pNode.displacementY).toFixed(1))
+          });
         }
-        if(pNode.repulsionForceX != 0 && pNode.repulsionForceY != 0){
-            drawForce(canvas, 225, 80, pNode.repulsionForceX/normalizeRatio, pNode.repulsionForceY/normalizeRatio, 2);
+        else{
+            hideNodeDetail();
         }
-        if(pNode.gravitationForceX != 0 && pNode.gravitationForceY != 0){
-            drawForce(canvas, 225, 80, pNode.gravitationForceX/normalizeRatio, pNode.gravitationForceY/normalizeRatio, 3);
-        }
-        $('#nodeDetail').drawText({
-            name: 'nodeName',
-            fillStyle: '#36c',
-            x: 150, y: 10,
-            fontSize: '12pt',
-            fontStyle: 'bold',
-            fontFamily: 'Arial',
-            text: ''.concat(selectedNode.data('name') + " @ (" + (selectedNode.position("x")).toFixed(1) + ", " + (selectedNode.position("y")).toFixed(1) + ") " + (selectedNode.width()).toFixed(0) + "x" + (selectedNode.height()).toFixed(0))
-        });
-        $('#nodeDetail').drawText({
-            name: 'springForce',
-            fillStyle: '#FF0000',
-            fromCenter: false,
-            x: 10, y: 55,
-            fontSize: '12pt',
-            fontFamily: 'Arial',
-            text: 'SF: '.concat((pNode.springForceX).toFixed(1), ', ', (pNode.springForceY).toFixed(1))
-        });
-        $('#nodeDetail').drawText({
-            name: 'repulsionForce',
-            fillStyle: '#0000FF',
-            fromCenter: false,
-            x: 10, y: 80,
-            fontSize: '12pt',
-            fontFamily: 'Arial',
-            text: 'RF: '.concat((pNode.repulsionForceX).toFixed(1), ', ', (pNode.repulsionForceY).toFixed(1))
-        });
-        $('#nodeDetail').drawText({
-            name: 'gravityForce',
-            fillStyle: '#8DB600',
-            fromCenter: false,
-            x: 10, y: 105,
-            fontSize: '12pt',
-            fontFamily: 'Arial',
-            text: 'GF: '.concat((pNode.gravitationForceX).toFixed(1), ', ', (pNode.gravitationForceY).toFixed(1))
-        });        
-        $('#nodeDetail').drawText({
-            name: 'displacement',
-            fillStyle: '#967117',
-            fromCenter: false,
-            x: 10, y: 130,
-            fontSize: '12pt',
-            fontFamily: 'Arial',
-            text: 'D: '.concat((pNode.displacementX).toFixed(1), ', ', (pNode.displacementY).toFixed(1))
-        });
     }
 };
 
@@ -592,46 +622,50 @@ function screenEdgeDetail(selectedEdge){
         var dEdge;
         var theId = selectedEdge.data('id');
         dEdge = dataToScreen[theId];
-        
-        var canvas = $('#nodeDetail');
-        
-        $('#nodeDetail').drawText({
-            name: 'edgeName',
-            fillStyle: '#36c',
-            x: 150, y: 10,
-            fontSize: '12pt',
-            fontStyle: 'bold',
-            fontFamily: 'Arial',
-            text: selectedEdge.id()
-        });
-        
-        $('#nodeDetail').drawText({
-            name: 'sourceNode',
-            fillStyle: '#FF0000',
-            fromCenter: false,
-            x: 6, y: 50,
-            fontSize: '12pt',
-            fontFamily: 'Arial',
-            text: 'Source Node : ' + selectedEdge.source().data('name')
-        });
-        $('#nodeDetail').drawText({
-            name: 'targetNode',
-            fillStyle: '#FF0000',
-            fromCenter: false,
-            x: 6, y: 80,
-            fontSize: '12pt',
-            fontFamily: 'Arial',
-            text: 'Target Node  : ' + selectedEdge.target().data('name')
-        });
-        $('#nodeDetail').drawText({
-            name: 'length',
-            fillStyle: '#FF0000',
-            fromCenter: false,
-            x: 6, y: 110,
-            fontSize: '12pt',
-            fontFamily: 'Arial',
-            text: 'Length : '.concat(dEdge.length.toFixed(1), ' (x: ', dEdge.xLength.toFixed(1), ', y: ', dEdge.yLength.toFixed(1), ')')
-        });
+        if(dEdge != null){
+          var canvas = $('#nodeDetail');
+
+          $('#nodeDetail').drawText({
+              name: 'edgeName',
+              fillStyle: '#36c',
+              x: 150, y: 10,
+              fontSize: '12pt',
+              fontStyle: 'bold',
+              fontFamily: 'Arial',
+              text: selectedEdge.id()
+          });
+
+          $('#nodeDetail').drawText({
+              name: 'sourceNode',
+              fillStyle: '#FF0000',
+              fromCenter: false,
+              x: 6, y: 50,
+              fontSize: '12pt',
+              fontFamily: 'Arial',
+              text: 'Source Node : ' + selectedEdge.source().data('name')
+          });
+          $('#nodeDetail').drawText({
+              name: 'targetNode',
+              fillStyle: '#FF0000',
+              fromCenter: false,
+              x: 6, y: 80,
+              fontSize: '12pt',
+              fontFamily: 'Arial',
+              text: 'Target Node  : ' + selectedEdge.target().data('name')
+          });
+          $('#nodeDetail').drawText({
+              name: 'length',
+              fillStyle: '#FF0000',
+              fromCenter: false,
+              x: 6, y: 110,
+              fontSize: '12pt',
+              fontFamily: 'Arial',
+              text: 'Length : '.concat(dEdge.length.toFixed(1), ' (x: ', dEdge.xLength.toFixed(1), ', y: ', dEdge.yLength.toFixed(1), ')')
+          });
+        }        
+        else{
+            hideNodeDetail();
+        }
     }
 }
 
