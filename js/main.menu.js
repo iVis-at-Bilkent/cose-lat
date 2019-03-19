@@ -489,12 +489,15 @@ var slider = new Slider('#slider', {
 });
 
 var keyframeNumber;
+var sliderChanged = false;
 slider.on("change", function(evt) {
     slider.setAttribute("active", true);
     $('#forceCanvas').clearCanvas();
     keyframeNumber = evt.newValue;
     if(slider.getValue() != -1){
-        screenNodes(keyframeNumber);
+        sliderChanged = true;
+        screenNodes(keyframeNumber);        
+        sliderChanged = false;       
     }
     if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null && keyframeNumber < animatedData.length-1){
         screenForces(keyframeNumber);

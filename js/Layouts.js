@@ -272,29 +272,29 @@ window.addEventListener('send', function (e) {
 //    console.log(animatedData[7][0]);
 }, false);
 
-var normalizeRatio;
+var normalizeRatio = 1;
 var normalizeRatio2;
 var normalizeForces = function(){
-  cy.on('layoutstop', function(){
-    var maxForce = -10000;
-    var minForce = 10000;
-    for(i = 0; i<animatedData.length; i++){
-      for(j = 0; j<Object.values(animatedData[i][0]).length; j++){
-        if(Object.values(animatedData[i][0])[j] != null){
-          var tempMax = Math.max(Object.values(animatedData[i][0])[j].springForceX, Object.values(animatedData[i][0])[j].springForceY, Object.values(animatedData[i][0])[j].repulsionForceX, Object.values(animatedData[i][0])[j].repulsionForceY, Object.values(animatedData[i][0])[j].gravitationForceX, Object.values(animatedData[i][0])[j].gravitationForceY);                        
-          var tempMin = Math.min(Object.values(animatedData[i][0])[j].springForceX, Object.values(animatedData[i][0])[j].springForceY, Object.values(animatedData[i][0])[j].repulsionForceX, Object.values(animatedData[i][0])[j].repulsionForceY, Object.values(animatedData[i][0])[j].gravitationForceX, Object.values(animatedData[i][0])[j].gravitationForceY);                        
-          if(tempMax > maxForce){
-              maxForce = tempMax;
-          }
-          if(tempMin < minForce){
-              minForce = tempMin;
-          }
-        }
-      }
-    }
-     normalizeRatio = Math.max(Math.abs(maxForce), Math.abs(minForce)) / 60;
-     normalizeRatio2 = Math.max(Math.abs(maxForce), Math.abs(minForce)) / 100;
-  });
+//  cy.on('layoutstop', function(){
+//    var maxForce = -10000;
+//    var minForce = 10000;
+//    for(i = 0; i<animatedData.length; i++){
+//      for(j = 0; j<Object.values(animatedData[i][0]).length; j++){
+//        if(Object.values(animatedData[i][0])[j] != null){
+//          var tempMax = Math.max(Object.values(animatedData[i][0])[j].springForceX, Object.values(animatedData[i][0])[j].springForceY, Object.values(animatedData[i][0])[j].repulsionForceX, Object.values(animatedData[i][0])[j].repulsionForceY, Object.values(animatedData[i][0])[j].gravitationForceX, Object.values(animatedData[i][0])[j].gravitationForceY);                        
+//          var tempMin = Math.min(Object.values(animatedData[i][0])[j].springForceX, Object.values(animatedData[i][0])[j].springForceY, Object.values(animatedData[i][0])[j].repulsionForceX, Object.values(animatedData[i][0])[j].repulsionForceY, Object.values(animatedData[i][0])[j].gravitationForceX, Object.values(animatedData[i][0])[j].gravitationForceY);                        
+//          if(tempMax > maxForce){
+//              maxForce = tempMax;
+//          }
+//          if(tempMin < minForce){
+//              minForce = tempMin;
+//          }
+//        }
+//      }
+//    }
+//     normalizeRatio = Math.max(Math.abs(maxForce), Math.abs(minForce)) / 60;
+//     normalizeRatio2 = Math.max(Math.abs(maxForce), Math.abs(minForce)) / 100;
+//  });
 };
 
 var screenNodes = function(keyframeNumber){
@@ -452,9 +452,11 @@ function drawForce(canvas, posX, posY, forceX, forceY, type){
 
 function editForces(){
     cy.on('zoom pan position', function(){
-        $('#forceCanvas').clearCanvas();   
-        if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null && keyframeNumber < animatedData.length-1){
-            screenForces(keyframeNumber);
+        if(!sliderChanged){
+            $('#forceCanvas').clearCanvas();   
+            if($('#forcesCheck').is(":checked") && keyframeNumber != -1 && keyframeNumber != null && keyframeNumber < animatedData.length-1){
+                screenForces(keyframeNumber);
+            }
         }
     });
     cy.on('select','node', function(event){
